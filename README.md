@@ -29,21 +29,15 @@ npm run preview  # preview production build
 
 ## GitHub Pages
 
-Vite `base` is set to `/human-anatomy-explorer/` for **project pages** at:
+Live site: https://chowbees.github.io/human-anatomy-explorer/
 
-`https://<user>.github.io/human-anatomy-explorer/`
+Vite `base` is `/human-anatomy-explorer/` for project pages. The built `dist/` is published on the `gh-pages` branch (Settings → Pages → Deploy from branch `gh-pages` / root).
 
-### Option A — GitHub Actions (included)
-
-Push to `main`. The workflow in `.github/workflows/gh-pages.yml` builds and deploys `dist/` to the `github-pages` environment.
-
-In the repo: **Settings → Pages → Source: GitHub Actions**.
-
-### Option B — Manual
+To republish after changes:
 
 ```bash
 npm run build
-# Upload the contents of dist/ to Pages (or use a branch `gh-pages` with dist contents)
+# push the contents of dist/ to the gh-pages branch
 ```
 
 If you rename the repository, update `base` in `vite.config.js` to match:
