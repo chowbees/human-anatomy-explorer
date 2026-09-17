@@ -448,3 +448,118 @@ button:active {
 #organFloatLabel.hidden {
   display: none;
 }
+
+/* Optional model checkboxes */
+.check-field {
+  display: flex;
+  align-items: center;
+  gap: 0.55rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.45rem;
+  cursor: pointer;
+  color: var(--text);
+}
+
+.check-field:last-child {
+  margin-bottom: 0;
+}
+
+.check-field input {
+  accent-color: var(--accent);
+  width: 1rem;
+  height: 1rem;
+}
+
+.attribution {
+  margin: 0 0 0.55rem;
+  font-size: 0.72rem;
+  color: var(--muted);
+  line-height: 1.4;
+}
+
+.attribution a {
+  color: var(--accent);
+  text-decoration: none;
+}
+
+.attribution a:hover {
+  text-decoration: underline;
+}
+
+.modal-card a {
+  color: var(--accent);
+}
+
+/* HRA CDN loading overlay */
+#loadOverlay {
+  position: absolute;
+  inset: 0;
+  z-index: 6;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgba(18, 28, 44, 0.55);
+  backdrop-filter: blur(4px);
+  pointer-events: none;
+  transition: opacity 0.25s ease;
+}
+
+#loadOverlay.hidden {
+  display: none;
+}
+
+.load-card {
+  width: min(360px, 88%);
+  padding: 1.1rem 1.2rem 1.15rem;
+  border-radius: 14px;
+  background: rgba(18, 26, 43, 0.94);
+  border: 1px solid var(--panel-border);
+  box-shadow: var(--shadow);
+  color: var(--text);
+  pointer-events: none;
+}
+
+.load-title {
+  font-weight: 650;
+  font-size: 0.95rem;
+  margin-bottom: 0.35rem;
+}
+
+.load-label {
+  font-size: 0.78rem;
+  color: var(--muted);
+  min-height: 1.2em;
+  margin-bottom: 0.65rem;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.load-track {
+  height: 8px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.load-bar {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  background: linear-gradient(90deg, var(--accent-dim), var(--accent));
+  transition: width 0.15s ease;
+}
+
+.load-pct {
+  margin-top: 0.4rem;
+  font-size: 0.78rem;
+  color: var(--accent);
+  font-variant-numeric: tabular-nums;
+}
+
+.load-note {
+  margin: 0.65rem 0 0;
+  font-size: 0.7rem;
+  color: var(--muted);
+  line-height: 1.35;
+}

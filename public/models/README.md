@@ -1,7 +1,11 @@
 # Models
 
-This app uses **procedural** educational meshes (see `src/geometry/organic.js` and `src/body.js`) rather than a downloaded full-body GLB.
+Organ meshes come from the **HuBMAP Human Reference Atlas 3D Reference Object Library** (**CC BY 4.0**).
 
-Open anatomy GLB libraries (e.g. HuBMAP HRA) are typically far larger than ~15 MB when covering a full organ set, which is awkward for GitHub Pages. Per-organ click IDs, sex switching, and height/weight scaling are also easier with procedural meshes.
+- https://humanatlas.io/3d-reference-library
+- API: https://apps.humanatlas.io/api/v1/reference-organs
+- CDN: `https://cdn.humanatlas.io/digital-objects/ref-organ/.../*.glb`
 
-If you later add a CC0/CC-BY GLB here, document its license and attribution in the root README.
+`hra-manifest.json` lists labels, sex, and CDN file URLs. **GLB files are not vendored** — the app loads them at runtime with a progress UI.
+
+Mouth is intentionally never loaded (very large). Eyes and blood vasculature are optional toggles.

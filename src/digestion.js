@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { state, FOOD_PROFILES } from './state.js'
 
 /**
- * Eating simulation: food bolus travels mouth → esophagus → stomach → intestines.
+ * Eating simulation: food bolus travels mouth → gut path derived from HRA organs.
  * Reactions are stylized / educational only.
  */
 export class DigestionSystem {
@@ -21,6 +21,9 @@ export class DigestionSystem {
   start(foodKey) {
     const profile = FOOD_PROFILES[foodKey]
     if (!profile || state.digestion.active) return false
+
+    // Refresh path from current organ positions
+    this.body.digestPath = this.body._buildDigestPath()
 
     state.digestion = {
       active: true,
@@ -41,7 +44,7 @@ export class DigestionSystem {
 
   _spawnBolus(color) {
     this._clearBolus()
-    const geo = new THREE.SphereGeometry(0.028, 12, 10)
+    const geo = new THREE.SphereGeometry(0.022, 12, 10)
     const mat = new THREE.MeshStandardMaterial({
       color,
       emissive: color,
@@ -58,7 +61,7 @@ export class DigestionSystem {
     if (path.length < 2) return
     const curve = new THREE.CatmullRomCurve3(path)
     const tube = new THREE.Mesh(
-      new THREE.TubeGeometry(curve, 64, 0.014, 6, false),
+      new THREE.TubeGeometry(curve, 64, 0.01, 6, false),
       new THREE.MeshStandardMaterial({
         color,
         emissive: color,
@@ -92,7 +95,7 @@ export class DigestionSystem {
   }
 
   _stageFromProgress(p) {
-    if (p < 0.1) return 'mouth'
+    if (p < 0.12) return 'mouth'
     if (p < 0.28) return 'esophagus'
     if (p < 0.48) return 'stomach'
     if (p < 0.75) return 'smallIntestine'
@@ -122,7 +125,7 @@ export class DigestionSystem {
       const labels = {
         mouth: 'in mouth',
         esophagus: 'descending esophagus',
-        stomach: 'in stomach',
+        stomach: 'in stomach region',
         smallIntestine: 'in small intestine',
         largeIntestine: 'in large intestine',
         complete: 'digestion complete',
@@ -150,10 +153,12 @@ export class DigestionSystem {
       this.bolus.scale.setScalar(pulse * (1.15 - d.progress * 0.45))
     }
 
-    if (stage === 'stomach') this.body.highlightOrgan('stomach')
-    else if (stage === 'smallIntestine') this.body.highlightOrgan('smallIntestine')
+    // Highlight available HRA organs along the stylized path
+    if (stage === 'stomach' || stage === 'esophagus') {
+      if (this.body.organMeshes.liver) this.body.highlightOrgan('liver')
+      else if (this.body.organMeshes.larynx) this.body.highlightOrgan('larynx')
+    } else if (stage === 'smallIntestine') this.body.highlightOrgan('smallIntestine')
     else if (stage === 'largeIntestine') this.body.highlightOrgan('largeIntestine')
-    else if (stage === 'esophagus') this.body.highlightOrgan('esophagus')
 
     if (d.progress >= 1) {
       d.active = false

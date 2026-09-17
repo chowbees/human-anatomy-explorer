@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Interactive 3D human anatomy explorer for students — educational study model, not medical advice." />
+    <meta name="description" content="Interactive 3D human anatomy explorer for students — HuBMAP HRA reference organs, educational study model, not medical advice." />
     <title>Human Anatomy Explorer</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫀</text></svg>" />
   </head>
@@ -12,7 +12,7 @@
       <aside id="controls" class="panel">
         <header class="panel-header">
           <h1>Anatomy Explorer</h1>
-          <p class="subtitle">Educational · Classroom anatomy model</p>
+          <p class="subtitle">Educational · HuBMAP HRA 3D organs</p>
         </header>
 
         <section class="control-group">
@@ -59,6 +59,19 @@
         </section>
 
         <section class="control-group">
+          <h2>Optional models</h2>
+          <p class="hint">Deferred large CDN assets — load when needed.</p>
+          <label class="check-field">
+            <input type="checkbox" id="optVasculature" />
+            <span>Blood vasculature (~18&nbsp;MB)</span>
+          </label>
+          <label class="check-field">
+            <input type="checkbox" id="optEyes" />
+            <span>Eyes (~20–27&nbsp;MB each)</span>
+          </label>
+        </section>
+
+        <section class="control-group">
           <h2>Eating simulation</h2>
           <p class="hint">Stylized educational reactions — not clinical claims.</p>
           <div class="btn-row">
@@ -87,6 +100,11 @@
         </section>
 
         <footer class="panel-footer">
+          <p class="attribution">
+            3D organs:
+            <a href="https://humanatlas.io/3d-reference-library" target="_blank" rel="noopener noreferrer">HuBMAP Human Reference Atlas</a>
+            (CC BY 4.0)
+          </p>
           <button type="button" id="showDisclaimer" class="linkish">Medical disclaimer</button>
         </footer>
       </aside>
@@ -97,6 +115,15 @@
         <div id="hud">
           <div id="focusLabel">Full body view</div>
           <div id="tip">Drag to orbit · Scroll to zoom · Hover / click organs</div>
+        </div>
+        <div id="loadOverlay" aria-live="polite">
+          <div class="load-card">
+            <div class="load-title">Loading anatomy models</div>
+            <div id="loadLabel" class="load-label">Fetching HuBMAP HRA models…</div>
+            <div class="load-track"><div id="loadBar" class="load-bar"></div></div>
+            <div id="loadPct" class="load-pct">0%</div>
+            <p class="load-note">Core organs load first from the HuBMAP CDN (not bundled). Mouth model is skipped (too large).</p>
+          </div>
         </div>
         <button type="button" id="togglePanel" class="mobile-toggle" aria-label="Toggle controls">☰</button>
       </main>
@@ -110,8 +137,14 @@
           It is <strong>not medical advice</strong>, diagnosis, or treatment guidance.
         </p>
         <p>
-          Anatomy, organ placement, blood flow, and digestion reactions are <strong>stylized and simplified</strong>.
+          Anatomy, organ placement, blood flow, and digestion reactions are <strong>simplified for learning</strong>.
           Real human physiology and individual reactions to food can differ substantially.
+        </p>
+        <p>
+          3D organ meshes are from the
+          <strong>HuBMAP Human Reference Atlas 3D Reference Object Library</strong>
+          (<a href="https://humanatlas.io/3d-reference-library" target="_blank" rel="noopener noreferrer">humanatlas.io/3d-reference-library</a>),
+          licensed under <strong>CC BY 4.0</strong>. Models load from the HuBMAP CDN at runtime.
         </p>
         <p>
           Always consult a qualified healthcare professional for medical concerns.

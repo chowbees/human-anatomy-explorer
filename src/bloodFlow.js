@@ -2,7 +2,8 @@ import * as THREE from 'three'
 import { state } from './state.js'
 
 /**
- * Subtle blood-flow particles along vessel polylines (not toy beads).
+ * Subtle blood-flow particles along a path derived from heart → body landmarks.
+ * When HRA vasculature is loaded, it is shown as the vessel mesh; particles still run.
  */
 export class BloodFlow {
   constructor(scene, body) {
@@ -12,11 +13,11 @@ export class BloodFlow {
     this.group.name = 'bloodFlow'
     scene.add(this.group)
 
-    this.count = 20
+    this.count = 22
     this.progress = new Float32Array(this.count)
     this.speeds = new Float32Array(this.count)
 
-    const geo = new THREE.SphereGeometry(0.006, 8, 8)
+    const geo = new THREE.SphereGeometry(0.005, 8, 8)
     const mat = new THREE.MeshStandardMaterial({
       color: 0xb8323c,
       emissive: 0x6a1520,
@@ -36,15 +37,43 @@ export class BloodFlow {
       this.meshes.push(m)
     }
 
+    this._guideTubes = []
     this._buildVesselTubes()
   }
 
+  _clearGuideTubes() {
+    for (const t of this._guideTubes) {
+      t.parent?.remove(t)
+      t.geometry?.dispose()
+      t.material?.dispose()
+    }
+    this._guideTubes = []
+  }
+
   _buildVesselTubes() {
+    this._clearGuideTubes()
+
+    // If HRA vasculature GLB is present, skip synthetic tubes (mesh is the vessel)
+    if (this.body.organMeshes.vasculature) {
+      const vas = this.body.organMeshes.vasculature
+      vas.traverse((c) => {
+        if (!c.isMesh || !c.material) return
+        const mats = Array.isArray(c.material) ? c.material : [c.material]
+        for (const mat of mats) {
+          mat.transparent = true
+          mat.opacity = Math.min(mat.opacity ?? 1, 0.55)
+          mat.depthWrite = false
+          if (mat.color) mat.color.lerp(new THREE.Color(0x8a3038), 0.35)
+        }
+      })
+      return
+    }
+
     const paths = this.body.vesselPaths
     const tubeMat = new THREE.MeshStandardMaterial({
       color: 0x7a2832,
       transparent: true,
-      opacity: 0.12,
+      opacity: 0.14,
       roughness: 0.55,
       depthWrite: false,
     })
@@ -53,30 +82,28 @@ export class BloodFlow {
       if (pts.length < 2) continue
       const curve = new THREE.CatmullRomCurve3(pts)
       const tube = new THREE.Mesh(
-        new THREE.TubeGeometry(curve, 64, 0.005, 6, false),
+        new THREE.TubeGeometry(curve, 64, 0.004, 6, false),
         tubeMat
       )
-      this.body.root.add(tube)
       tube.userData.isVessel = true
+      this.body.root.add(tube)
+      this._guideTubes.push(tube)
     }
   }
 
   rebuild() {
-    const toRemove = []
-    this.body.root.traverse((c) => {
-      if (c.userData?.isVessel) toRemove.push(c)
-    })
-    for (const c of toRemove) {
-      c.parent?.remove(c)
-      c.geometry?.dispose()
-    }
+    this.body.vesselPaths = this.body._buildVesselPaths?.() || this.body.vesselPaths
     this._buildVesselTubes()
   }
 
   update(dt) {
     const paths = this.body.vesselPaths
-    if (!paths.length) return
+    if (!paths.length) {
+      for (const m of this.meshes) m.visible = false
+      return
+    }
     const pts = paths[0]
+    if (pts.length < 2) return
     const curve = new THREE.CatmullRomCurve3(pts)
     const intensity = state.bloodFlowIntensity * (0.7 + state.digestion.energyBoost * 0.3)
     const speedMul = state.simSpeed * intensity

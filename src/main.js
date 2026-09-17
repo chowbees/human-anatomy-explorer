@@ -3,7 +3,7 @@ import { AnatomyScene } from './scene.js'
 import { state, applyHealth } from './state.js'
 import { ORGAN_META, SYSTEM_LABELS } from './body.js'
 
-const DISCLAIMER_KEY = 'anatomy-explorer-disclaimer-ack-v1'
+const DISCLAIMER_KEY = 'anatomy-explorer-disclaimer-ack-v2'
 
 const SYSTEM_ORDER = ['head', 'chest', 'abdomen', 'pelvis']
 
@@ -61,15 +61,49 @@ const ui = {
   refreshOrganButtons(presentIds) {
     buildOrganButtons(presentIds, window.__anatomy?.scene)
   },
+  setLoadProgress(p) {
+    const overlay = document.getElementById('loadOverlay')
+    const bar = document.getElementById('loadBar')
+    const label = document.getElementById('loadLabel')
+    const pct = document.getElementById('loadPct')
+    if (!overlay) return
+
+    if (p.phase === 'done') {
+      overlay.classList.add('hidden')
+      return
+    }
+    if (p.phase === 'error') {
+      overlay.classList.remove('hidden')
+      label.textContent = `Load error: ${p.label}`
+      pct.textContent = ''
+      bar.style.width = '0%'
+      return
+    }
+
+    overlay.classList.remove('hidden')
+    const frac = Math.max(0, Math.min(1, p.fraction || 0))
+    bar.style.width = `${(frac * 100).toFixed(1)}%`
+    pct.textContent = `${Math.round(frac * 100)}%`
+    const phaseLabel =
+      p.phase === 'core'
+        ? 'Loading HRA organs'
+        : p.phase?.startsWith('optional')
+          ? `Loading ${p.phase.split(':')[1] || 'optional'}`
+          : 'Loading'
+    label.textContent = p.label ? `${phaseLabel}: ${p.label}` : phaseLabel
+  },
 }
 
 function buildOrganButtons(presentIds, scene) {
   const container = document.getElementById('organButtons')
   container.innerHTML = ''
-  const present = new Set(presentIds || Object.keys(ORGAN_META).filter((id) => {
-    const meta = ORGAN_META[id]
-    return !meta.sex || meta.sex === state.sex
-  }))
+  const present = new Set(
+    presentIds ||
+      Object.keys(ORGAN_META).filter((id) => {
+        const meta = ORGAN_META[id]
+        return !meta.sex || meta.sex === state.sex
+      })
+  )
 
   for (const sys of SYSTEM_ORDER) {
     const groupIds = Object.entries(ORGAN_META)
@@ -148,6 +182,11 @@ function setupControls(scene) {
   weightVal.textContent = `${state.weightKg} kg`
 
   sex.addEventListener('change', () => {
+    // Optional assets are sex-specific; clear toggles on reload
+    const optV = document.getElementById('optVasculature')
+    const optE = document.getElementById('optEyes')
+    if (optV) optV.checked = false
+    if (optE) optE.checked = false
     scene.setSex(sex.value)
   })
 
@@ -183,6 +222,19 @@ function setupControls(scene) {
     })
   }
 
+  const optVessels = document.getElementById('optVasculature')
+  if (optVessels) {
+    optVessels.addEventListener('change', () => {
+      scene.setOptional('vasculature', optVessels.checked)
+    })
+  }
+  const optEyes = document.getElementById('optEyes')
+  if (optEyes) {
+    optEyes.addEventListener('change', () => {
+      scene.setOptional('eyes', optEyes.checked)
+    })
+  }
+
   document.querySelectorAll('.food-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const ok = scene.feed(btn.dataset.food)
@@ -205,7 +257,8 @@ function setupControls(scene) {
     panel.classList.toggle('open')
   })
 
-  buildOrganButtons(scene.body.listOrganIds(), scene)
+  // Organ buttons filled when HRA core load completes
+  buildOrganButtons([], scene)
 }
 
 // Boot
@@ -218,3 +271,10 @@ window.__anatomy = { scene, state }
 setupControls(scene)
 scene.resize()
 ui.updateReadouts()
+ui.setLoadProgress({
+  phase: 'core',
+  loaded: 0,
+  total: 1,
+  fraction: 0,
+  label: 'Fetching HuBMAP HRA models…',
+})

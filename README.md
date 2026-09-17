@@ -4,45 +4,47 @@ Interactive **3D classroom anatomy model** for kids and students, built with **V
 
 > **Medical disclaimer:** For educational / reference use only. **Not medical advice.** Anatomy, blood flow, and digestion reactions are simplified; real physiology may differ. Consult a qualified clinician for health concerns.
 
+## Attribution
+
+**3D organ meshes** are from the **HuBMAP Human Reference Atlas 3D Reference Object Library**, licensed **CC BY 4.0**.
+
+- Library: https://humanatlas.io/3d-reference-library
+- Models are **loaded at runtime from the HuBMAP CDN** (not vendored into this repo)
+- Manifest: `public/models/hra-manifest.json` (labels, sex, CDN URLs)
+
 ## Features
 
-- **Controls:** sex (male/female proportions + reproductive organs), health (healthy/unhealthy vitals & skin), height & weight scaling, simulation speed, **outer-body skin mode** (translucent / more opaque / hidden)
-- **3D scene:** OrbitControls, soft studio lighting, calm gradient backdrop + simple floor (no toy grid)
-- **Body:** translucent humanoid silhouette with lathed torso, head/face cues, tapered limbs
-- **Organs:** textbook-recognizable shapes (not balloon spheres) — clickable with hover labels
-- **Focus:** click organ or panel buttons (Head / Chest / Abdomen / Pelvis); **Zoom out** for full body
-- **Blood flow:** subtle particles along vessels
-- **Eating simulation:** spinach / rice / meat — bolus path mouth → intestines with stylized energy differences
-- **Disclaimer modal** with one-time acknowledgment (`localStorage`)
+- **Real HRA GLB organs** assembled in shared Visible Human space (skin shell + major organs)
+- **Controls:** sex (reloads male/female HRA set), health (subtle tint/emissive), height & weight scaling, simulation speed, **outer-body skin mode** (translucent / more opaque / hidden)
+- **Loading UI:** progress bar; core organs first so useful anatomy appears quickly
+- **Optional CDN assets:** blood vasculature, eyes (large — off by default). Mouth is skipped (too large)
+- **Focus:** click / hover organ meshes or panel buttons (Head / Chest / Abdomen / Pelvis)
+- **Blood flow:** particles along a heart→body path; HRA vasculature mesh when loaded
+- **Eating simulation:** spinach / rice / meat — bolus along a path derived from gut organ positions
+- **Disclaimer modal** with HuBMAP credit + one-time acknowledgment
 
-## Organs included
+## Organs loaded by default
 
-| Category | Organ ids |
-|--------|-----------|
-| Head & neck | `brain`, `eyes`, `pituitary`, `spinalCord`, `thyroid` |
-| Chest | `heart`, `trachea`, `leftLung`, `rightLung`, `esophagus` |
-| Abdomen | `stomach`, `liver`, `gallbladder`, `pancreas`, `spleen`, `smallIntestine`, `largeIntestine`, `leftKidney`, `rightKidney`, `leftAdrenal`, `rightAdrenal` |
-| Pelvis | `bladder`, `leftUreter`, `rightUreter`, `rectum` + sex-dependent: female `uterus`, `leftOvary`, `rightOvary` / male `prostate`, `leftTestis`, `rightTestis` |
+| Region | Organs |
+|--------|--------|
+| Head & neck | Brain, larynx, spinal cord |
+| Chest | Heart, lungs, trachea, thymus (+ translucent skin shell) |
+| Abdomen | Liver, pancreas, spleen, small intestine, large intestine, left/right kidney |
+| Pelvis | Urinary bladder; **male** prostate; **female** uterus, ovaries, fallopian tubes |
 
-## Visual approach
+**Optional (toggle):** blood vasculature, left/right eyes  
+**Skipped:** mouth (~53 MB)
 
-**Procedural educational meshes** (not a downloaded GLTF atlas).
+## Load strategy
 
-Why not a free full-body GLB?
+1. Fetch `hra-manifest.json`
+2. Parallel-batch load **core** GLBs for the selected sex from `cdn.humanatlas.io`
+3. Place all models in one root group, uniform scale to ~1.7 scene units, ground the bounding box (Y-up)
+4. Optional assets load on demand via UI checkboxes
 
-- Complete open anatomy libraries (e.g. HuBMAP HRA) are **tens–hundreds of MB** — too large for a snappy GitHub Pages demo
-- This app needs **per-organ IDs**, sex switching, height/weight scale, and digestion/blood paths wired to the same meshes
+## Coordinate system
 
-Instead, organs use **Lathe / Extrude / Tube / multi-part compounds** with organic profiles:
-
-- Brain: sulci-hinted hemispheres + cerebellum + brainstem (eyes are **in face sockets**, not stuck on the brain)
-- Heart: classic pointed shape with vessel stubs
-- Lungs: elongated lobed forms with cardiac notch on the left
-- Stomach: J-shaped lathe; liver: right + left lobes; kidneys: bean extrusions
-- Small intestine: continuous coils; large intestine: colon frame with haustrum hint
-- Soft **MeshPhysicalMaterial** PBR (low emissive — not toy glow)
-
-No paid APIs. Assets under `public/` are only icons/favicon; geometries are code-generated at runtime.
+HRA Visible Human reference organs share a **meter-scale** body space and assemble coherently when loaded together. This app applies a uniform fit scale (~0.93 for the male set to reach ~1.7 units) and centers the combined bounds on the ground.
 
 ## Local development
 
@@ -58,39 +60,22 @@ npm run build    # outputs to dist/
 npm run preview  # preview production build
 ```
 
-### Quick visual check
-
-1. Default view should look like a **semi-transparent anatomy mannequin**, not balloons
-2. Hover brain / heart / kidney / intestine — shapes should be identifiable before reading the label
-3. Eyes sit in facial sockets at normal scale (not googly orbs on the brain)
-4. Toggle **Outer body (skin)** → Hidden to study organs alone
-5. Sex / health / height / weight / food / speed still work
+Requires network access to the HuBMAP CDN for organ meshes.
 
 ## GitHub Pages
 
 Live site: https://chowbees.github.io/human-anatomy-explorer/
 
-Vite `base` is `/human-anatomy-explorer/`. Publish `dist/` to the `gh-pages` branch.
-
-```bash
-npm run build
-# push the contents of dist/ to the gh-pages branch
-```
+Vite `base` is `/human-anatomy-explorer/`. Publish `dist/` to the `gh-pages` branch (parent deploy — do not push from agents unless asked).
 
 ## Stack
 
 - Vite 8
-- Three.js (WebGL) + OrbitControls
+- Three.js (WebGL) + OrbitControls + GLTFLoader
+- HuBMAP HRA GLBs via CDN
 - No backend, no API keys
-
-## Intentional shortcuts
-
-- Body and organs are **procedural educational meshes**, not a medical atlas or photoreal scan
-- Some glands (pituitary, adrenals, ovaries/testes) remain compact primitives — still color-coded and labeled
-- Digestion and blood flow are **educational animations**, not clinical models
-- Male/female differences: silhouette proportions + reproductive organs
-- Covers major organs of primary systems; omits countless minor structures
 
 ## License
 
-Educational demo — use and adapt freely for non-clinical teaching demos.
+App code: educational demo — adapt freely for non-clinical teaching.  
+**HRA 3D models:** © HuBMAP contributors — **CC BY 4.0** — https://humanatlas.io/3d-reference-library

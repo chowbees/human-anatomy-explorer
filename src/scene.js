@@ -12,6 +12,7 @@ export class AnatomyScene {
     this.clock = new THREE.Clock()
     this.focusTween = null
     this._hoverId = null
+    this._bodyReady = false
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -26,32 +27,34 @@ export class AnatomyScene {
     this.renderer.toneMappingExposure = 1.05
 
     this.scene = new THREE.Scene()
-    // Soft classroom / studio backdrop (no toy grid)
     this.scene.background = new THREE.Color(0xc8d2de)
     this.scene.fog = new THREE.Fog(0xc8d2de, 6, 16)
 
     this.camera = new THREE.PerspectiveCamera(
       42,
       canvas.clientWidth / Math.max(canvas.clientHeight, 1),
-      0.1,
+      0.05,
       100
     )
-    this.defaultCamPos = new THREE.Vector3(0.95, 1.2, 2.85)
-    this.defaultTarget = new THREE.Vector3(0, 0.78, 0)
+    this.defaultCamPos = new THREE.Vector3(1.15, 1.05, 2.6)
+    this.defaultTarget = new THREE.Vector3(0, 0.85, 0)
     this.camera.position.copy(this.defaultCamPos)
 
     this.controls = new OrbitControls(this.camera, canvas)
     this.controls.target.copy(this.defaultTarget)
     this.controls.enableDamping = true
     this.controls.dampingFactor = 0.08
-    this.controls.minDistance = 0.35
+    this.controls.minDistance = 0.25
     this.controls.maxDistance = 8
     this.controls.maxPolarAngle = Math.PI * 0.95
 
     this._lights()
     this._floor()
 
-    this.body = new AnatomyBody(this.scene)
+    this.body = new AnatomyBody(this.scene, {
+      onProgress: (p) => this.ui.setLoadProgress?.(p),
+      onReady: (info) => this._onBodyReady(info),
+    })
     this.blood = new BloodFlow(this.scene, this.body)
     this.digestion = new DigestionSystem(this.scene, this.body, (msg, active) => {
       ui.setDigestionStatus(msg, active)
@@ -73,8 +76,41 @@ export class AnatomyScene {
     requestAnimationFrame(this._anim)
   }
 
+  _onBodyReady(info) {
+    this._bodyReady = true
+    this.blood.rebuild()
+    this.ui.setLoadProgress?.({
+      phase: 'done',
+      loaded: 1,
+      total: 1,
+      fraction: 1,
+      label: 'Ready',
+    })
+    this.ui.refreshOrganButtons?.(info.organs || this.body.listOrganIds())
+    // Frame the assembled body
+    this._frameBody()
+  }
+
+  _frameBody() {
+    const box = new THREE.Box3().setFromObject(this.body.root)
+    if (box.isEmpty()) return
+    const size = box.getSize(new THREE.Vector3())
+    const center = box.getCenter(new THREE.Vector3())
+    this.defaultTarget.copy(center)
+    const dist = Math.max(size.y * 1.35, size.x * 1.8, 2.2)
+    this.defaultCamPos.set(center.x + dist * 0.35, center.y + size.y * 0.05, center.z + dist * 0.95)
+    if (!state.focusedOrgan) {
+      this.camera.position.copy(this.defaultCamPos)
+      this.controls.target.copy(this.defaultTarget)
+    }
+    // Floor under feet
+    if (this._floorMesh) {
+      this._floorMesh.position.y = box.min.y - 0.002
+      this._floorRing.position.y = box.min.y - 0.001
+    }
+  }
+
   _lights() {
-    // Soft studio key + fill + cool rim — calm educational lighting
     const hemi = new THREE.HemisphereLight(0xf0f4fa, 0xb0a090, 0.55)
     this.scene.add(hemi)
 
@@ -96,21 +132,20 @@ export class AnatomyScene {
   }
 
   _floor() {
-    // Simple soft ground disc — classroom mannequin stand
-    const disc = new THREE.Mesh(
-      new THREE.CircleGeometry(1.4, 64),
+    this._floorMesh = new THREE.Mesh(
+      new THREE.CircleGeometry(1.5, 64),
       new THREE.MeshStandardMaterial({
         color: 0xa8b4c4,
         roughness: 0.92,
         metalness: 0.04,
       })
     )
-    disc.rotation.x = -Math.PI / 2
-    disc.position.y = -0.549
-    this.scene.add(disc)
+    this._floorMesh.rotation.x = -Math.PI / 2
+    this._floorMesh.position.y = 0
+    this.scene.add(this._floorMesh)
 
-    const ring = new THREE.Mesh(
-      new THREE.RingGeometry(1.35, 1.55, 64),
+    this._floorRing = new THREE.Mesh(
+      new THREE.RingGeometry(1.45, 1.65, 64),
       new THREE.MeshStandardMaterial({
         color: 0x96a4b6,
         roughness: 0.95,
@@ -118,9 +153,9 @@ export class AnatomyScene {
         side: THREE.DoubleSide,
       })
     )
-    ring.rotation.x = -Math.PI / 2
-    ring.position.y = -0.548
-    this.scene.add(ring)
+    this._floorRing.rotation.x = -Math.PI / 2
+    this._floorRing.position.y = 0.001
+    this.scene.add(this._floorRing)
   }
 
   resize() {
@@ -140,6 +175,7 @@ export class AnatomyScene {
   }
 
   _onPointer(e) {
+    if (!this._bodyReady) return
     this._setPointer(e)
     this.raycaster.setFromCamera(this.pointer, this.camera)
     const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
@@ -150,6 +186,7 @@ export class AnatomyScene {
   }
 
   _onHover(e) {
+    if (!this._bodyReady) return
     const rect = this._setPointer(e)
     this.raycaster.setFromCamera(this.pointer, this.camera)
     const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
@@ -216,20 +253,34 @@ export class AnatomyScene {
     }
   }
 
-  rebuildBody() {
-    this.body._build()
-    this.blood.rebuild()
-  }
-
-  setSex(sex) {
-    this.body.setSex(sex)
-    this.blood.rebuild()
-    this.ui.refreshOrganButtons?.(this.body.listOrganIds())
+  async setSex(sex) {
+    this._bodyReady = false
+    this.ui.setLoadProgress?.({
+      phase: 'core',
+      loaded: 0,
+      total: 1,
+      fraction: 0,
+      label: `Loading ${sex} HRA organs…`,
+    })
+    await this.body.setSex(sex)
+    // onReady handles blood rebuild + buttons
     if (state.focusedOrgan && this.body.organMeshes[state.focusedOrgan]) {
       this.focusOrgan(state.focusedOrgan)
     } else {
       this.zoomOut()
     }
+  }
+
+  async setOptional(kind, enabled) {
+    this.ui.setLoadProgress?.({
+      phase: `optional:${kind}`,
+      loaded: 0,
+      total: 1,
+      fraction: 0,
+      label: enabled ? `Loading ${kind}…` : `Removing ${kind}…`,
+    })
+    await this.body.setOptional(kind, enabled)
+    this.blood.rebuild()
   }
 
   feed(food) {
@@ -265,9 +316,11 @@ export class AnatomyScene {
       }
     }
 
-    this.body.update(dt, t)
-    this.blood.update(dt)
-    this.digestion.update(dt)
+    if (this._bodyReady) {
+      this.body.update(dt, t)
+      this.blood.update(dt)
+      this.digestion.update(dt)
+    }
     this.controls.update()
     this.renderer.render(this.scene, this.camera)
 

@@ -1,0 +1,650 @@
+[
+  {
+    "label": "adipose",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/adipose-female/v1.0/assets/3d-vh-f-adipose.glb",
+    "x": "188.5679380000000264772097580134868621826171875",
+    "y": "132.653920999999996865881257690489292144775390625",
+    "z": "35.961254400000001396620064042508602142333984375"
+  },
+  {
+    "label": "adipose",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/adipose-male/v1.0/assets/3d-vh-m-adipose.glb",
+    "x": "201.779347000000001344233169220387935638427734375",
+    "y": "200.693950000000000954969436861574649810791015625",
+    "z": "33.9099920000000025765984901227056980133056640625"
+  },
+  {
+    "label": "blood vasculature",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/blood-vasculature-female/v1.3/assets/3d-vh-f-blood-vasculature.glb",
+    "x": "192.75642199999998638304532505571842193603515625",
+    "y": "799.2175928000000340034603141248226165771484375",
+    "z": "184.926245899999997845952748320996761322021484375"
+  },
+  {
+    "label": "blood vasculature",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/blood-vasculature-male/v1.3/assets/3d-vh-m-blood-vasculature.glb",
+    "x": "236.19892199999998183557181619107723236083984375",
+    "y": "871.8366449999999758802005089819431304931640625",
+    "z": "187.42637530000001788721419870853424072265625"
+  },
+  {
+    "label": "brain",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/brain-female/v1.4/assets/3d-allen-f-brain.glb",
+    "x": "136.3772334999999884530552662909030914306640625",
+    "y": "146.0959420000000363870640285313129425048828125",
+    "z": "167.039527099999986603506840765476226806640625"
+  },
+  {
+    "label": "brain",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/brain-male/v1.4/assets/3d-allen-m-brain.glb",
+    "x": "136.377235400000017762067727744579315185546875",
+    "y": "146.0958999999999150531948544085025787353515625",
+    "z": "167.039514199999985066824592649936676025390625"
+  },
+  {
+    "label": "epiploic appendage of transverse colon",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/epiploic-appendage-of-transverse-colon-female/v1.0/assets/3d-vh-f-epiploic-appendage-of-transverse-colon.glb",
+    "x": "69.69534158289860670265625230967998504638671875",
+    "y": "23.4624732145470034083700738847255706787109375",
+    "z": "24.7354514364369606482796370983123779296875"
+  },
+  {
+    "label": "epiploic appendage of transverse colon",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/epiploic-appendage-of-transverse-colon-male/v1.0/assets/3d-vh-m-epiploic-appendage-of-transverse-colon.glb",
+    "x": "86.0503753800000055207419791258871555328369140625",
+    "y": "38.37592100000000527870724909007549285888671875",
+    "z": "44.609874899999994113386492244899272918701171875"
+  },
+  {
+    "label": "Left eye",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-female-left/v1.3/assets/3d-vh-f-eye-l.glb",
+    "x": "24.456055899999995517646311782300472259521484375",
+    "y": "24.4120679999999765641405247151851654052734375",
+    "z": "25.74835639999999870042302063666284084320068359375"
+  },
+  {
+    "label": "Right eye",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-female-right/v1.3/assets/3d-vh-f-eye-r.glb",
+    "x": "24.45605409999999579895302304066717624664306640625",
+    "y": "24.412096000000019557774066925048828125",
+    "z": "25.748358319999997689819792867638170719146728515625"
+  },
+  {
+    "label": "Left eye",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-male-left/v1.3/assets/3d-vh-m-eye-l.glb",
+    "x": "24.45605400000000173577063833363354206085205078125",
+    "y": "24.4120360000000573563738726079463958740234375",
+    "z": "25.7483561000000094054485089145600795745849609375"
+  },
+  {
+    "label": "Right eye",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/eye-male-right/v1.3/assets/3d-vh-m-eye-r.glb",
+    "x": "24.4560536999999982299414114095270633697509765625",
+    "y": "24.41210000000000945874489843845367431640625",
+    "z": "25.7483600000000052432369557209312915802001953125"
+  },
+  {
+    "label": "Left fallopian tube",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/fallopian-tube-female-left/v1.2/assets/3d-vh-f-fallopian-tube-l.glb",
+    "x": "38.62300890000000208601704798638820648193359375",
+    "y": "44.471684199999998554631019942462444305419921875",
+    "z": "18.5497299999999967212716001085937023162841796875"
+  },
+  {
+    "label": "Right fallopian tube",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/fallopian-tube-female-right/v1.2/assets/3d-vh-f-fallopian-tube-r.glb",
+    "x": "34.412022899999982428198563866317272186279296875",
+    "y": "44.603484699999995655161910690367221832275390625",
+    "z": "20.87175370000000640402504359371960163116455078125"
+  },
+  {
+    "label": "heart",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/heart-female/v1.3/assets/3d-vh-f-heart.glb",
+    "x": "142.54222620000001597873051650822162628173828125",
+    "y": "109.98499399999997194754541851580142974853515625",
+    "z": "101.497424999999992678567650727927684783935546875"
+  },
+  {
+    "label": "heart",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/heart-male/v1.3/assets/3d-vh-m-heart.glb",
+    "x": "124.35118410000001176740624941885471343994140625",
+    "y": "105.43523400000003675813786685466766357421875",
+    "z": "105.2152392999999932499122223816812038421630859375"
+  },
+  {
+    "label": "intervertebral disk",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/intervertebral-disk-female/v1.0/assets/3d-vh-f-intervertebral-disk.glb",
+    "x": "67.4934147000000024263499653898179531097412109375",
+    "y": "563.4948809999999639330781064927577972412109375",
+    "z": "83.93380999999999403371475636959075927734375"
+  },
+  {
+    "label": "intervertebral disk",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/intervertebral-disk-male/v1.0/assets/3d-vh-m-intervertebral-disk.glb",
+    "x": "65.040547599999996464248397387564182281494140625",
+    "y": "541.502330000000029031070880591869354248046875",
+    "z": "90.497704200000015362093108706176280975341796875"
+  },
+  {
+    "label": "Left kidney",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-left/v1.3/assets/3d-vh-f-kidney-l.glb",
+    "x": "73.1107170000000081699909060262143611907958984375",
+    "y": "124.85636100000004944376996718347072601318359375",
+    "z": "77.57954599999999345527612604200839996337890625"
+  },
+  {
+    "label": "Right kidney",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-female-right/v1.3/assets/3d-vh-f-kidney-r.glb",
+    "x": "73.3907120000000077197910286486148834228515625",
+    "y": "97.854703999999998131897882558405399322509765625",
+    "z": "69.5401580999999993082383298315107822418212890625"
+  },
+  {
+    "label": "Left kidney",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-male-left/v1.3/assets/3d-vh-m-kidney-l.glb",
+    "x": "75.710382699999996702899807132780551910400390625",
+    "y": "106.548046999999996842234395444393157958984375",
+    "z": "82.4302870000000069694578996859490871429443359375"
+  },
+  {
+    "label": "Right kidney",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/kidney-male-right/v1.3/assets/3d-vh-m-kidney-r.glb",
+    "x": "65.4960264000000051964889280498027801513671875",
+    "y": "112.5346359999999776846379972994327545166015625",
+    "z": "76.3538089000000042005922296084463596343994140625"
+  },
+  {
+    "label": "Left knee",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-female-left/v1.3/assets/3d-vh-f-knee-l.glb",
+    "x": "101.6387342999999958692569634877145290374755859375",
+    "y": "771.7859323999999787702108733355998992919921875",
+    "z": "110.477529400000008763527148403227329254150390625"
+  },
+  {
+    "label": "Right knee",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-female-right/v1.3/assets/3d-vh-f-knee-r.glb",
+    "x": "101.63873410000002195374690927565097808837890625",
+    "y": "771.7859323999999787702108733355998992919921875",
+    "z": "110.47750800000000026557245291769504547119140625"
+  },
+  {
+    "label": "Left knee",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-male-left/v1.2/assets/3d-vh-m-knee-l.glb",
+    "x": "173.416073000000011461452231742441654205322265625",
+    "y": "887.4633161000000427520717494189739227294921875",
+    "z": "164.55549730000001318330760113894939422607421875"
+  },
+  {
+    "label": "Right knee",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/knee-male-right/v1.2/assets/3d-vh-m-knee-r.glb",
+    "x": "173.416069999999990614014677703380584716796875",
+    "y": "887.463430000000016661942936480045318603515625",
+    "z": "164.5554938999999876614310778677463531494140625"
+  },
+  {
+    "label": "large intestine",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/large-intestine-female/v1.3/assets/3d-sbu-f-large-intestine.glb",
+    "x": "243.275765999999975974787957966327667236328125",
+    "y": "294.94715120000006436384865082800388336181640625",
+    "z": "193.41787659999999959836713969707489013671875"
+  },
+  {
+    "label": "large intestine",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/large-intestine-male/v1.3/assets/3d-sbu-m-large-intestine.glb",
+    "x": "259.1260009999999738283804617822170257568359375",
+    "y": "450.3008552000000008774804882705211639404296875",
+    "z": "224.84414699999996400947566144168376922607421875"
+  },
+  {
+    "label": "larynx",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/larynx-female/v1.1/assets/3d-vh-f-larynx.glb",
+    "x": "46.46055119999999760693754069507122039794921875",
+    "y": "60.378500000000030922819860279560089111328125",
+    "z": "40.06126323999999527813997701741755008697509765625"
+  },
+  {
+    "label": "larynx",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/larynx-male/v1.1/assets/3d-vh-m-larynx.glb",
+    "x": "53.75308169999999563515302725136280059814453125",
+    "y": "72.6234000000000605723471380770206451416015625",
+    "z": "38.62831199999999398642103187739849090576171875"
+  },
+  {
+    "label": "liver",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/liver-female/v1.2/assets/3d-vh-f-liver.glb",
+    "x": "247.107491000000010217263479717075824737548828125",
+    "y": "169.9726580000000240033841691911220550537109375",
+    "z": "166.276918999999992365701473318040370941162109375"
+  },
+  {
+    "label": "liver",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/liver-male/v1.2/assets/3d-vh-m-liver.glb",
+    "x": "191.36759669999997868217178620398044586181640625",
+    "y": "174.5545439999999643987393938004970550537109375",
+    "z": "201.756767999999993890014593489468097686767578125"
+  },
+  {
+    "label": "lung",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/lung-female/v1.4/assets/3d-vh-f-lung.glb",
+    "x": "251.134737999999970270437188446521759033203125",
+    "y": "223.03624099999996133192325942218303680419921875",
+    "z": "152.604897480000005316469469107687473297119140625"
+  },
+  {
+    "label": "lung",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/lung-male/v1.4/assets/3d-vh-m-lung.glb",
+    "x": "259.4186140000000477812136523425579071044921875",
+    "y": "229.1373190000000477084540762007236480712890625",
+    "z": "189.71354999999999790816218592226505279541015625"
+  },
+  {
+    "label": "lymph node",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/lymph-node-female/v1.4/assets/3d-nih-f-lymph-node.glb",
+    "x": "19.631595399999998363682607305236160755157470703125",
+    "y": "11.3333460000000059153535403311252593994140625",
+    "z": "12.5129315700000010025405572378076612949371337890625"
+  },
+  {
+    "label": "lymph node",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/lymph-node-male/v1.4/assets/3d-nih-m-lymph-node.glb",
+    "x": "18.3182714000000004261892172507941722869873046875",
+    "y": "10.67265900000001010994310490787029266357421875",
+    "z": "12.966960000000000263753463514149188995361328125"
+  },
+  {
+    "label": "main bronchus",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/main-bronchus-female/v1.1/assets/3d-vh-f-main-bronchus.glb",
+    "x": "92.8134806999999995014150044880807399749755859375",
+    "y": "54.6324730000000045038177631795406341552734375",
+    "z": "31.088535000000007357812137342989444732666015625"
+  },
+  {
+    "label": "main bronchus",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/main-bronchus-male/v1.1/assets/3d-vh-m-main-bronchus.glb",
+    "x": "74.7231469000000032565367291681468486785888671875",
+    "y": "44.2475000000000591171556152403354644775390625",
+    "z": "27.5188046100000036631172406487166881561279296875"
+  },
+  {
+    "label": "Left mammary gland",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/mammary-gland-female-left/v1.1/assets/3d-vh-f-mammary-gland-l.glb",
+    "x": "128.159177299999981869405019097030162811279296875",
+    "y": "181.8662880000000541258486919105052947998046875",
+    "z": "111.85599350000001095395418815314769744873046875"
+  },
+  {
+    "label": "Right mammary gland",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/mammary-gland-female-right/v1.1/assets/3d-vh-f-mammary-gland-r.glb",
+    "x": "128.30897649999997156555764377117156982421875",
+    "y": "180.003672999999935200321488082408905029296875",
+    "z": "113.18930399999999281135387718677520751953125"
+  },
+  {
+    "label": "manubrium",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/manubrium-female/v1.0/assets/3d-vh-f-manubrium.glb",
+    "x": "72.07845800000001190710463561117649078369140625",
+    "y": "52.33470000000005484253051690757274627685546875",
+    "z": "40.34835369999999699075488024391233921051025390625"
+  },
+  {
+    "label": "mouth",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/mouth-female/v1.0/assets/3d-vh-f-mouth.glb",
+    "x": "145.00006999999999379724613390862941741943359375",
+    "y": "108.3538310000000137733877636492252349853515625",
+    "z": "128.730289999999996553015080280601978302001953125"
+  },
+  {
+    "label": "mouth",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/mouth-male/v1.0/assets/3d-vh-m-mouth.glb",
+    "x": "129.50988000000000965883373282849788665771484375",
+    "y": "94.0890349999999671126715838909149169921875",
+    "z": "125.353762999999986504917615093290805816650390625"
+  },
+  {
+    "label": "omentum",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/omentum-female/v1.0/assets/3d-vh-f-omentum.glb",
+    "x": "248.0332427207173395800055004656314849853515625",
+    "y": "190.92811444091802286493475548923015594482421875",
+    "z": "115.728917363283386521288775838911533355712890625"
+  },
+  {
+    "label": "omentum",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/omentum-male/v1.0/assets/3d-vh-m-omentum.glb",
+    "x": "285.69233500000001413354766555130481719970703125",
+    "y": "326.50988899999998693601810373365879058837890625",
+    "z": "139.705536899999998468047124333679676055908203125"
+  },
+  {
+    "label": "Left ovary",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ovary-female-left/v1.3/assets/3d-vh-f-ovary-l.glb",
+    "x": "12.27739600000000308455128106288611888885498046875",
+    "y": "23.9469873000000035290213418193161487579345703125",
+    "z": "10.53417280000000033624019124545156955718994140625"
+  },
+  {
+    "label": "Right ovary",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ovary-female-right/v1.3/assets/3d-vh-f-ovary-r.glb",
+    "x": "12.3096840999999841415046830661594867706298828125",
+    "y": "23.98689000000000959289536694996058940887451171875",
+    "z": "10.6275193000000029996954253874719142913818359375"
+  },
+  {
+    "label": "Left palatine tonsil",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-female-left/v1.2/assets/3d-vh-f-palatine-tonsil-l.glb",
+    "x": "19.6208182849999985819522407837212085723876953125",
+    "y": "26.3063430000000835207174532115459442138671875",
+    "z": "17.85338490000000177815309143625199794769287109375"
+  },
+  {
+    "label": "Right palatine tonsil",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-female-right/v1.2/assets/3d-vh-f-palatine-tonsil-r.glb",
+    "x": "17.805021999999997461827661027200520038604736328125",
+    "y": "27.2586669999999458013917319476604461669921875",
+    "z": "15.638914000000003312607077532447874546051025390625"
+  },
+  {
+    "label": "Left palatine tonsil",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-male-left/v1.2/assets/3d-vh-m-palatine-tonsil-l.glb",
+    "x": "16.499862050000000834870661492459475994110107421875",
+    "y": "24.195253999999977168045006692409515380859375",
+    "z": "16.40786229999999790152287459932267665863037109375"
+  },
+  {
+    "label": "Right palatine tonsil",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/palatine-tonsil-male-right/v1.2/assets/3d-vh-m-palatine-tonsil-r.glb",
+    "x": "16.76715930000000298605300486087799072265625",
+    "y": "23.9552259999999250794644467532634735107421875",
+    "z": "14.397908000000001038642949424684047698974609375"
+  },
+  {
+    "label": "pancreas",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-female/v1.3/assets/3d-vh-f-pancreas.glb",
+    "x": "172.03172599999999192732502706348896026611328125",
+    "y": "56.5383889999999382780515588819980621337890625",
+    "z": "84.37345360000000482614268548786640167236328125"
+  },
+  {
+    "label": "pancreas",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/pancreas-male/v1.3/assets/3d-vh-m-pancreas.glb",
+    "x": "111.4339153000000095516952569596469402313232421875",
+    "y": "72.01209699999998292696545831859111785888671875",
+    "z": "83.6152127999999947860487736761569976806640625"
+  },
+  {
+    "label": "pelvis",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/pelvis-female/v1.3/assets/3d-vh-f-pelvis.glb",
+    "x": "316.83789200000001073931343853473663330078125",
+    "y": "211.492869899999988092531566508114337921142578125",
+    "z": "182.74447776499999918087269179522991180419921875"
+  },
+  {
+    "label": "pelvis",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/pelvis-male/v1.3/assets/3d-vh-m-pelvis.glb",
+    "x": "283.53032500000000482032191939651966094970703125",
+    "y": "218.485638000000022884705686010420322418212890625",
+    "z": "172.846436199999999416831997223198413848876953125"
+  },
+  {
+    "label": "placenta full term",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/placenta-full-term-female/v1.1/assets/3d-vh-f-placenta-full-term.glb",
+    "x": "250.89727299999998422208591364324092864990234375",
+    "y": "230.5373180000000274958438239991664886474609375",
+    "z": "133.7828299999999899227987043559551239013671875"
+  },
+  {
+    "label": "prostate",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/prostate-male/v1.2/assets/3d-vh-m-prostate.glb",
+    "x": "82.971190599999999903957359492778778076171875",
+    "y": "70.6056622353029723626605118624866008758544921875",
+    "z": "42.84867683044324593311102944426238536834716796875"
+  },
+  {
+    "label": "Left renal pelvis",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-female-left/v1.0/assets/3d-vh-f-renal-pelvis-l.glb",
+    "x": "12.53614390000000611280484008602797985076904296875",
+    "y": "24.26600500000000693034962750971317291259765625",
+    "z": "16.038795899999996663609636016190052032470703125"
+  },
+  {
+    "label": "Right renal pelvis",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-female-right/v1.0/assets/3d-vh-f-renal-pelvis-r.glb",
+    "x": "18.50428059999999419460436911322176456451416015625",
+    "y": "19.74354199999999082137946970760822296142578125",
+    "z": "13.560946099999995340112945996224880218505859375"
+  },
+  {
+    "label": "Left renal pelvis",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-male-left/v1.0/assets/3d-vh-m-renal-pelvis-l.glb",
+    "x": "17.6995178000000095153154688887298107147216796875",
+    "y": "19.42747800000000779618858359754085540771484375",
+    "z": "19.78515807000000137350070872344076633453369140625"
+  },
+  {
+    "label": "Right renal pelvis",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/renal-pelvis-male-right/v1.0/assets/3d-vh-m-renal-pelvis-r.glb",
+    "x": "15.85719999999999885176293901167809963226318359375",
+    "y": "15.19227000000000771251507103443145751953125",
+    "z": "11.2980641500000018595528672449290752410888671875"
+  },
+  {
+    "label": "skin",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/skin-female/v1.5/assets/3d-vh-f-skin.glb",
+    "x": "961.6948670000000447544152848422527313232421875",
+    "y": "1657.7781340000001364387571811676025390625",
+    "z": "327.1065350000000080399331636726856231689453125"
+  },
+  {
+    "label": "skin",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/skin-male/v1.4/assets/3d-vh-m-skin.glb",
+    "x": "1043.15279999999984283931553363800048828125",
+    "y": "1824.27606900000000678119249641895294189453125",
+    "z": "325.63124599999997599297785200178623199462890625"
+  },
+  {
+    "label": "small intestine",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/small-intestine-female/v1.2/assets/3d-vh-f-small-intestine.glb",
+    "x": "161.5714699999999766077962704002857208251953125",
+    "y": "217.23270440000004555258783511817455291748046875",
+    "z": "99.9937541999999979225322022102773189544677734375"
+  },
+  {
+    "label": "small intestine",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/small-intestine-male/v1.2/assets/3d-vh-m-small-intestine.glb",
+    "x": "187.982302399999980480060912668704986572265625",
+    "y": "265.37127000000003818058758042752742767333984375",
+    "z": "122.1629901200000034577897167764604091644287109375"
+  },
+  {
+    "label": "spinal cord",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/spinal-cord-female/v1.1/assets/3d-vh-f-spinal-cord.glb",
+    "x": "17.90012263999999930774720269255340099334716796875",
+    "y": "408.8210159999999859792296774685382843017578125",
+    "z": "81.90027600000001939406502060592174530029296875"
+  },
+  {
+    "label": "spinal cord",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/spinal-cord-male/v1.1/assets/3d-vh-m-spinal-cord.glb",
+    "x": "20.7090368100000006279515218921005725860595703125",
+    "y": "465.18326399999995146572473458945751190185546875",
+    "z": "79.6350244300000014163742889650166034698486328125"
+  },
+  {
+    "label": "spleen",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/spleen-female/v1.3/assets/3d-vh-f-spleen.glb",
+    "x": "89.5606500000000096406438387930393218994140625",
+    "y": "102.315115999999989071511663496494293212890625",
+    "z": "70.941198000000014189936337061226367950439453125"
+  },
+  {
+    "label": "spleen",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/spleen-male/v1.3/assets/3d-vh-m-spleen.glb",
+    "x": "110.4075533000000035599441616795957088470458984375",
+    "y": "118.637559000000010200892575085163116455078125",
+    "z": "88.63268809999999575666151940822601318359375"
+  },
+  {
+    "label": "sternum",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/sternum-female/v1.0/assets/3d-vh-f-sternum.glb",
+    "x": "36.6977528000000035035554901696741580963134765625",
+    "y": "105.6852000000000089130480773746967315673828125",
+    "z": "25.171603099999998676139512099325656890869140625"
+  },
+  {
+    "label": "thymus",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/thymus-female/v1.3/assets/3d-vh-f-thymus.glb",
+    "x": "86.0334131999999982554072630591690540313720703125",
+    "y": "123.56959999999997990016709081828594207763671875",
+    "z": "53.76292151999999902045601629652082920074462890625"
+  },
+  {
+    "label": "thymus",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/thymus-male/v1.3/assets/3d-vh-m-thymus.glb",
+    "x": "36.9998542000000014695615391246974468231201171875",
+    "y": "75.688699999999926149030216038227081298828125",
+    "z": "35.0791300000000063619154389016330242156982421875"
+  },
+  {
+    "label": "trachea",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/trachea-female/v1.1/assets/3d-vh-f-trachea.glb",
+    "x": "24.301568939999999230394678306765854358673095703125",
+    "y": "107.90760000000000218278728425502777099609375",
+    "z": "76.6042889999999943029251880943775177001953125"
+  },
+  {
+    "label": "trachea",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/trachea-male/v1.1/assets/3d-vh-m-trachea.glb",
+    "x": "28.718474300000000454247128800489008426666259765625",
+    "y": "125.1206000000000813088263384997844696044921875",
+    "z": "67.229833399999989751449902541935443878173828125"
+  },
+  {
+    "label": "Left ureter",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-female-left/v1.2/assets/3d-vh-f-ureter-l.glb",
+    "x": "53.4683380000000028076101443730294704437255859375",
+    "y": "219.65150299999999106148607097566127777099609375",
+    "z": "36.71686720000000292429831461049616336822509765625"
+  },
+  {
+    "label": "Right ureter",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-female-right/v1.2/assets/3d-vh-f-ureter-r.glb",
+    "x": "35.29750720000000541176632395945489406585693359375",
+    "y": "224.343835100000006832487997598946094512939453125",
+    "z": "35.68346050000000246882336796261370182037353515625"
+  },
+  {
+    "label": "Left ureter",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-male-left/v1.2/assets/3d-vh-m-ureter-l.glb",
+    "x": "40.3793486000000001467924448661506175994873046875",
+    "y": "255.973092900000011695738066919147968292236328125",
+    "z": "50.4441546999999985700924298726022243499755859375"
+  },
+  {
+    "label": "Right ureter",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/ureter-male-right/v1.2/assets/3d-vh-m-ureter-r.glb",
+    "x": "36.641052599999994754398358054459095001220703125",
+    "y": "223.2361399999999775900505483150482177734375",
+    "z": "51.73807959999999894762368057854473590850830078125"
+  },
+  {
+    "label": "urinary bladder",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/urinary-bladder-female/v1.2/assets/3d-vh-f-urinary-bladder.glb",
+    "x": "51.97650689999999684687281842343509197235107421875",
+    "y": "44.221177699999998367275111377239227294921875",
+    "z": "61.699121259999998301282175816595554351806640625"
+  },
+  {
+    "label": "urinary bladder",
+    "sex": "Male",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/urinary-bladder-male/v1.2/assets/3d-vh-m-urinary-bladder.glb",
+    "x": "63.8089546000000069625457399524748325347900390625",
+    "y": "39.86523779999999561596268904395401477813720703125",
+    "z": "72.3138190000000093959897640161216259002685546875"
+  },
+  {
+    "label": "uterus",
+    "sex": "Female",
+    "file": "https://cdn.humanatlas.io/digital-objects/ref-organ/uterus-female/v1.2/assets/3d-vh-f-uterus.glb",
+    "x": "52.48761089999999995825419318862259387969970703125",
+    "y": "46.99312660999999735622623120434582233428955078125",
+    "z": "58.69554710000000596892277826555073261260986328125"
+  }
+]
