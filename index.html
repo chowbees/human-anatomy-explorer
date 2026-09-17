@@ -61,17 +61,10 @@
           <div id="digestionStatus" class="status-box" aria-live="polite">No active digestion</div>
         </section>
 
-        <section class="control-group">
+        <section class="control-group organ-panel">
           <h2>Organs</h2>
-          <p class="hint">Click an organ in the scene or below to focus.</p>
-          <div class="btn-row wrap" id="organButtons">
-            <button type="button" class="organ-btn" data-organ="brain">Brain</button>
-            <button type="button" class="organ-btn" data-organ="heart">Heart</button>
-            <button type="button" class="organ-btn" data-organ="lungs">Lungs</button>
-            <button type="button" class="organ-btn" data-organ="liver">Liver</button>
-            <button type="button" class="organ-btn" data-organ="stomach">Stomach</button>
-            <button type="button" class="organ-btn" data-organ="intestines">Intestines</button>
-          </div>
+          <p class="hint">Click an organ in the scene or below to focus. Grouped by region.</p>
+          <div id="organButtons" class="organ-buttons-scroll"></div>
           <button type="button" id="zoomOut" class="secondary full">Zoom out (full body)</button>
         </section>
 
@@ -92,9 +85,10 @@
 
       <main id="viewport">
         <canvas id="c"></canvas>
+        <div id="organFloatLabel" class="hidden" aria-hidden="true"></div>
         <div id="hud">
           <div id="focusLabel">Full body view</div>
-          <div id="tip">Drag to orbit · Scroll to zoom · Click organs</div>
+          <div id="tip">Drag to orbit · Scroll to zoom · Hover / click organs</div>
         </div>
         <button type="button" id="togglePanel" class="mobile-toggle" aria-label="Toggle controls">☰</button>
       </main>

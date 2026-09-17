@@ -11,6 +11,7 @@ export class AnatomyScene {
     this.ui = ui
     this.clock = new THREE.Clock()
     this.focusTween = null
+    this._hoverId = null
 
     this.renderer = new THREE.WebGLRenderer({
       canvas,
@@ -31,8 +32,8 @@ export class AnatomyScene {
       0.1,
       100
     )
-    this.defaultCamPos = new THREE.Vector3(0.9, 1.2, 2.8)
-    this.defaultTarget = new THREE.Vector3(0, 0.85, 0)
+    this.defaultCamPos = new THREE.Vector3(0.9, 1.15, 2.9)
+    this.defaultTarget = new THREE.Vector3(0, 0.75, 0)
     this.camera.position.copy(this.defaultCamPos)
 
     this.controls = new OrbitControls(this.camera, canvas)
@@ -54,8 +55,14 @@ export class AnatomyScene {
 
     this.raycaster = new THREE.Raycaster()
     this.pointer = new THREE.Vector2()
+    this._proj = new THREE.Vector3()
 
     canvas.addEventListener('pointerdown', (e) => this._onPointer(e))
+    canvas.addEventListener('pointermove', (e) => this._onHover(e))
+    canvas.addEventListener('pointerleave', () => {
+      this._hoverId = null
+      if (!state.focusedOrgan) this.ui.setFloatLabel(null)
+    })
     window.addEventListener('resize', () => this.resize())
 
     this._anim = this._anim.bind(this)
@@ -106,15 +113,54 @@ export class AnatomyScene {
     this.renderer.setSize(w, h, false)
   }
 
-  _onPointer(e) {
+  _setPointer(e) {
     const rect = this.canvas.getBoundingClientRect()
     this.pointer.x = ((e.clientX - rect.left) / rect.width) * 2 - 1
     this.pointer.y = -((e.clientY - rect.top) / rect.height) * 2 + 1
+    return rect
+  }
+
+  _onPointer(e) {
+    this._setPointer(e)
     this.raycaster.setFromCamera(this.pointer, this.camera)
     const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
     if (hits.length) {
       const id = hits[0].object.userData.organId
       if (id) this.focusOrgan(id)
+    }
+  }
+
+  _onHover(e) {
+    const rect = this._setPointer(e)
+    this.raycaster.setFromCamera(this.pointer, this.camera)
+    const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
+    if (hits.length) {
+      const id = hits[0].object.userData.organId
+      this._hoverId = id
+      const focus = this.body.getOrganFocusTarget(id)
+      if (focus) {
+        this._proj.copy(focus.target)
+        this._proj.project(this.camera)
+        const x = (this._proj.x * 0.5 + 0.5) * rect.width
+        const y = (-this._proj.y * 0.5 + 0.5) * rect.height
+        this.ui.setFloatLabel(focus.label, x, y)
+      }
+      this.canvas.style.cursor = 'pointer'
+    } else {
+      this._hoverId = null
+      this.canvas.style.cursor = 'default'
+      if (state.focusedOrgan) {
+        const focus = this.body.getOrganFocusTarget(state.focusedOrgan)
+        if (focus) {
+          this._proj.copy(focus.target)
+          this._proj.project(this.camera)
+          const x = (this._proj.x * 0.5 + 0.5) * rect.width
+          const y = (-this._proj.y * 0.5 + 0.5) * rect.height
+          this.ui.setFloatLabel(focus.label, x, y)
+        }
+      } else {
+        this.ui.setFloatLabel(null)
+      }
     }
   }
 
@@ -125,6 +171,7 @@ export class AnatomyScene {
     this.body.highlightOrgan(id)
     this.ui.setFocusLabel(focus.label)
     this.ui.setActiveOrgan(id)
+    this.ui.setFloatLabel(focus.label, null, null, true)
     this._tweenCamera(focus.camera, focus.target, 0.85)
   }
 
@@ -133,6 +180,7 @@ export class AnatomyScene {
     this.body.clearHighlight()
     this.ui.setFocusLabel('Full body view')
     this.ui.setActiveOrgan(null)
+    this.ui.setFloatLabel(null)
     this._tweenCamera(this.defaultCamPos.clone(), this.defaultTarget.clone(), 0.9)
   }
 
@@ -157,7 +205,12 @@ export class AnatomyScene {
   setSex(sex) {
     this.body.setSex(sex)
     this.blood.rebuild()
-    if (state.focusedOrgan) this.focusOrgan(state.focusedOrgan)
+    this.ui.refreshOrganButtons?.(this.body.listOrganIds())
+    if (state.focusedOrgan && this.body.organMeshes[state.focusedOrgan]) {
+      this.focusOrgan(state.focusedOrgan)
+    } else {
+      this.zoomOut()
+    }
   }
 
   feed(food) {
@@ -177,6 +230,21 @@ export class AnatomyScene {
       this.camera.position.lerpVectors(tw.fromPos, tw.toPos, e)
       this.controls.target.lerpVectors(tw.fromTarget, tw.toTarget, e)
       if (u >= 1) this.focusTween = null
+    }
+
+    // Keep float label glued to focused organ while orbiting
+    if (state.focusedOrgan && !this._hoverId) {
+      const focus = this.body.getOrganFocusTarget(state.focusedOrgan)
+      if (focus) {
+        const rect = this.canvas.getBoundingClientRect()
+        this._proj.copy(focus.target)
+        this._proj.project(this.camera)
+        if (this._proj.z < 1) {
+          const x = (this._proj.x * 0.5 + 0.5) * rect.width
+          const y = (-this._proj.y * 0.5 + 0.5) * rect.height
+          this.ui.setFloatLabel(focus.label, x, y)
+        }
+      }
     }
 
     this.body.update(dt, t)

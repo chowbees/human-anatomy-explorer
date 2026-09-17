@@ -6,12 +6,27 @@ Interactive, **stylized** 3D human anatomy web app built with **Vite**, **vanill
 
 ## Features
 
-- **Controls:** sex (male/female proportions), health (healthy/unhealthy vitals & skin), height & weight scaling, simulation speed
-- **3D scene:** OrbitControls (orbit + zoom), translucent body silhouette, clickable organs (brain, heart, lungs, liver, stomach, intestines)
-- **Focus:** click organ or use panel buttons; **Zoom out** returns to full-body view
+- **Controls:** sex (male/female proportions + reproductive organs), health (healthy/unhealthy vitals & skin), height & weight scaling, simulation speed
+- **3D scene:** OrbitControls (orbit + zoom), translucent full-body silhouette (head with face cues, neck, torso, arms/hands, legs/feet), clickable major organs with distinct shapes/colors
+- **Focus:** click organ or use panel buttons (grouped by Head, Chest, Abdomen, Pelvis); hover shows a floating label; **Zoom out** returns to full-body view
 - **Blood flow:** animated particles along stylized vessels (intensity follows health / energy)
-- **Eating simulation:** spinach / rice / meat — bolus path mouth → esophagus → stomach → intestines with stylized energy & gut activity differences
+- **Eating simulation:** spinach / rice / meat — bolus path mouth → esophagus → stomach → small intestine → large intestine with stylized energy & gut activity differences
 - **Disclaimer modal** with one-time acknowledgment (`localStorage`)
+
+## Organs included
+
+Major organs of primary systems (educational atlas level — **not** every minor gland, lymph node, or vessel):
+
+| Region | Organ ids |
+|--------|-----------|
+| Head & neck | `brain`, `eyes`, `pituitary`, `spinalCord`, `thyroid` |
+| Chest | `heart`, `trachea`, `leftLung`, `rightLung`, `esophagus` |
+| Abdomen | `stomach`, `liver`, `gallbladder`, `pancreas`, `spleen`, `smallIntestine`, `largeIntestine`, `leftKidney`, `rightKidney`, `leftAdrenal`, `rightAdrenal` |
+| Pelvis | `bladder`, `leftUreter`, `rightUreter`, `rectum` + sex-dependent: female `uterus`, `leftOvary`, `rightOvary` / male `prostate`, `leftTestis`, `rightTestis` |
+
+## Visual approach
+
+Procedural meshes only (Capsule / Lathe / Tube / Sphere compounds) — no large GLTF downloads, works offline for Pages. Skin opacity ~0.2 so organs show through; organs use distinct colors with light emissive. Heart is a two-lobe + tip shape; lungs breathe; heart beats with vitals.
 
 ## Local development
 
@@ -54,12 +69,13 @@ For a **user/organization site** (`username.github.io`), set `base: '/'` instead
 - Three.js (WebGL) + OrbitControls
 - No backend, no API keys
 
-## Intentional shortcuts (v1)
+## Intentional shortcuts
 
 - Body and organs are **procedural / stylized meshes**, not a medical atlas or photoreal scan
 - Digestion and blood flow are **educational animations**, not clinical models
 - Single vessel loop and simplified digestive path
-- Male/female differences are silhouette/proportion cues only
+- Male/female differences include silhouette proportions and reproductive organs only
+- Covers major organs of primary systems; omits countless minor structures
 
 ## License
 

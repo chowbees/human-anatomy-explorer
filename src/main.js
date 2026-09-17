@@ -1,8 +1,11 @@
 import './style.css'
 import { AnatomyScene } from './scene.js'
 import { state, applyHealth } from './state.js'
+import { ORGAN_META, SYSTEM_LABELS } from './body.js'
 
 const DISCLAIMER_KEY = 'anatomy-explorer-disclaimer-ack-v1'
+
+const SYSTEM_ORDER = ['head', 'chest', 'abdomen', 'pelvis']
 
 const ui = {
   setDigestionStatus(msg, active) {
@@ -17,6 +20,21 @@ const ui = {
     document.querySelectorAll('.organ-btn').forEach((b) => {
       b.classList.toggle('active', b.dataset.organ === id)
     })
+  },
+  setFloatLabel(text, x, y, pinned) {
+    const el = document.getElementById('organFloatLabel')
+    if (!text) {
+      el.classList.add('hidden')
+      el.textContent = ''
+      return
+    }
+    el.textContent = text
+    el.classList.remove('hidden')
+    if (x != null && y != null) {
+      el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -120%)`
+    } else if (pinned) {
+      // Keep previous position until next hover/frame update
+    }
   },
   updateReadouts() {
     const hr = Math.round(state.heartRate * (0.95 + state.digestion.energyBoost * 0.15))
@@ -40,6 +58,49 @@ const ui = {
       b.disabled = !enabled
     })
   },
+  refreshOrganButtons(presentIds) {
+    buildOrganButtons(presentIds, window.__anatomy?.scene)
+  },
+}
+
+function buildOrganButtons(presentIds, scene) {
+  const container = document.getElementById('organButtons')
+  container.innerHTML = ''
+  const present = new Set(presentIds || Object.keys(ORGAN_META).filter((id) => {
+    const meta = ORGAN_META[id]
+    return !meta.sex || meta.sex === state.sex
+  }))
+
+  for (const sys of SYSTEM_ORDER) {
+    const groupIds = Object.entries(ORGAN_META)
+      .filter(([id, meta]) => meta.system === sys && present.has(id))
+      .map(([id]) => id)
+    if (!groupIds.length) continue
+
+    const group = document.createElement('div')
+    group.className = 'organ-group'
+    const title = document.createElement('h3')
+    title.textContent = SYSTEM_LABELS[sys] || sys
+    group.appendChild(title)
+
+    const row = document.createElement('div')
+    row.className = 'btn-row wrap'
+    for (const id of groupIds) {
+      const btn = document.createElement('button')
+      btn.type = 'button'
+      btn.className = 'organ-btn'
+      btn.dataset.organ = id
+      btn.textContent = ORGAN_META[id].name
+      btn.addEventListener('click', () => scene?.focusOrgan(id))
+      row.appendChild(btn)
+    }
+    group.appendChild(row)
+    container.appendChild(group)
+  }
+
+  if (state.focusedOrgan) {
+    ui.setActiveOrgan(state.focusedOrgan)
+  }
 }
 
 function setupDisclaimer() {
@@ -129,16 +190,14 @@ function setupControls(scene) {
     })
   })
 
-  document.querySelectorAll('.organ-btn').forEach((btn) => {
-    btn.addEventListener('click', () => scene.focusOrgan(btn.dataset.organ))
-  })
-
   document.getElementById('zoomOut').addEventListener('click', () => scene.zoomOut())
 
   const panel = document.getElementById('controls')
   document.getElementById('togglePanel').addEventListener('click', () => {
     panel.classList.toggle('open')
   })
+
+  buildOrganButtons(scene.body.listOrganIds(), scene)
 }
 
 // Boot
@@ -147,9 +206,7 @@ setupDisclaimer()
 
 const canvas = document.getElementById('c')
 const scene = new AnatomyScene(canvas, ui)
+window.__anatomy = { scene, state }
 setupControls(scene)
 scene.resize()
 ui.updateReadouts()
-
-// Expose for debugging in console
-window.__anatomy = { scene, state }

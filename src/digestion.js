@@ -2,7 +2,7 @@ import * as THREE from 'three'
 import { state, FOOD_PROFILES } from './state.js'
 
 /**
- * Eating simulation: food bolus travels mouth → intestines.
+ * Eating simulation: food bolus travels mouth → esophagus → stomach → intestines.
  * Reactions are stylized / educational only.
  */
 export class DigestionSystem {
@@ -58,7 +58,7 @@ export class DigestionSystem {
     if (path.length < 2) return
     const curve = new THREE.CatmullRomCurve3(path)
     const tube = new THREE.Mesh(
-      new THREE.TubeGeometry(curve, 48, 0.014, 6, false),
+      new THREE.TubeGeometry(curve, 64, 0.014, 6, false),
       new THREE.MeshStandardMaterial({
         color,
         emissive: color,
@@ -92,10 +92,11 @@ export class DigestionSystem {
   }
 
   _stageFromProgress(p) {
-    if (p < 0.12) return 'mouth'
-    if (p < 0.35) return 'esophagus'
-    if (p < 0.55) return 'stomach'
-    if (p < 0.9) return 'intestines'
+    if (p < 0.1) return 'mouth'
+    if (p < 0.28) return 'esophagus'
+    if (p < 0.48) return 'stomach'
+    if (p < 0.75) return 'smallIntestine'
+    if (p < 0.95) return 'largeIntestine'
     return 'complete'
   }
 
@@ -122,7 +123,8 @@ export class DigestionSystem {
         mouth: 'in mouth',
         esophagus: 'descending esophagus',
         stomach: 'in stomach',
-        intestines: 'in intestines',
+        smallIntestine: 'in small intestine',
+        largeIntestine: 'in large intestine',
         complete: 'digestion complete',
       }
       this._setStatus(`${profile.label}: ${labels[stage]}… (${profile.note})`)
@@ -149,7 +151,9 @@ export class DigestionSystem {
     }
 
     if (stage === 'stomach') this.body.highlightOrgan('stomach')
-    else if (stage === 'intestines') this.body.highlightOrgan('intestines')
+    else if (stage === 'smallIntestine') this.body.highlightOrgan('smallIntestine')
+    else if (stage === 'largeIntestine') this.body.highlightOrgan('largeIntestine')
+    else if (stage === 'esophagus') this.body.highlightOrgan('esophagus')
 
     if (d.progress >= 1) {
       d.active = false

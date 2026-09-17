@@ -397,3 +397,53 @@ button:active {
     display: block;
   }
 }
+
+/* Organ list grouped by system */
+.organ-panel .organ-buttons-scroll {
+  max-height: 280px;
+  overflow-y: auto;
+  padding-right: 0.25rem;
+  margin-bottom: 0.15rem;
+  scrollbar-width: thin;
+  scrollbar-color: var(--panel-border) transparent;
+}
+
+.organ-group {
+  margin-bottom: 0.65rem;
+}
+
+.organ-group:last-child {
+  margin-bottom: 0;
+}
+
+.organ-group h3 {
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
+}
+
+/* Floating organ name on hover / focus */
+#organFloatLabel {
+  position: absolute;
+  left: 0;
+  top: 0;
+  z-index: 4;
+  pointer-events: none;
+  padding: 0.3rem 0.55rem;
+  border-radius: 8px;
+  background: rgba(12, 20, 36, 0.88);
+  border: 1px solid var(--accent-dim);
+  color: var(--text);
+  font-size: 0.82rem;
+  font-weight: 600;
+  white-space: nowrap;
+  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  will-change: transform;
+}
+
+#organFloatLabel.hidden {
+  display: none;
+}
