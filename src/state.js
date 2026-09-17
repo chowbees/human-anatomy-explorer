@@ -11,6 +11,8 @@ export const state = {
   bloodFlowIntensity: 1,
   digestionSpeed: 1,
   skinTone: 0xe8b89a,
+  /** translucent | solid | hidden */
+  skinMode: 'translucent',
 
   /** Camera / focus */
   focusedOrgan: null,

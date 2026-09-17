@@ -256,7 +256,7 @@ button:active {
 
 #viewport {
   position: relative;
-  background: radial-gradient(ellipse at 50% 30%, #1a2744 0%, #0a101c 70%);
+  background: linear-gradient(180deg, #d5dee8 0%, #b8c4d4 55%, #9aabbc 100%);
   overflow: hidden;
 }
 
@@ -281,13 +281,14 @@ button:active {
 #focusLabel {
   font-size: 1rem;
   font-weight: 600;
-  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.7);
+  color: #1a2438;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.55);
 }
 
 #tip {
   font-size: 0.78rem;
-  color: var(--muted);
-  text-shadow: 0 1px 8px rgba(0, 0, 0, 0.8);
+  color: #3a4a62;
+  text-shadow: 0 1px 0 rgba(255, 255, 255, 0.4);
 }
 
 .mobile-toggle {
@@ -432,15 +433,15 @@ button:active {
   top: 0;
   z-index: 4;
   pointer-events: none;
-  padding: 0.3rem 0.55rem;
+  padding: 0.35rem 0.65rem;
   border-radius: 8px;
-  background: rgba(12, 20, 36, 0.88);
-  border: 1px solid var(--accent-dim);
-  color: var(--text);
-  font-size: 0.82rem;
-  font-weight: 600;
+  background: rgba(255, 255, 255, 0.92);
+  border: 1px solid #7a9bb8;
+  color: #1a2438;
+  font-size: 0.85rem;
+  font-weight: 650;
   white-space: nowrap;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.4);
+  box-shadow: 0 6px 18px rgba(30, 50, 80, 0.22);
   will-change: transform;
 }
 

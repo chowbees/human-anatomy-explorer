@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Interactive 3D human anatomy explorer — educational and stylized, not medical advice." />
+    <meta name="description" content="Interactive 3D human anatomy explorer for students — educational study model, not medical advice." />
     <title>Human Anatomy Explorer</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫀</text></svg>" />
   </head>
@@ -12,7 +12,7 @@
       <aside id="controls" class="panel">
         <header class="panel-header">
           <h1>Anatomy Explorer</h1>
-          <p class="subtitle">Educational · Stylized 3D</p>
+          <p class="subtitle">Educational · Classroom anatomy model</p>
         </header>
 
         <section class="control-group">
@@ -46,6 +46,14 @@
               <option value="1" selected>Normal (1×)</option>
               <option value="2">Fast (2×)</option>
               <option value="4">Very fast (4×)</option>
+            </select>
+          </label>
+          <label class="field">
+            <span>Outer body (skin)</span>
+            <select id="skinMode">
+              <option value="translucent" selected>Translucent (organs visible)</option>
+              <option value="solid">More opaque</option>
+              <option value="hidden">Hidden (organs only)</option>
             </select>
           </label>
         </section>

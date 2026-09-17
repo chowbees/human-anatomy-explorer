@@ -41,11 +41,11 @@ export class DigestionSystem {
 
   _spawnBolus(color) {
     this._clearBolus()
-    const geo = new THREE.SphereGeometry(0.045, 12, 10)
+    const geo = new THREE.SphereGeometry(0.028, 12, 10)
     const mat = new THREE.MeshStandardMaterial({
       color,
       emissive: color,
-      emissiveIntensity: 0.45,
+      emissiveIntensity: 0.22,
       roughness: 0.35,
     })
     this.bolus = new THREE.Mesh(geo, mat)
@@ -62,9 +62,9 @@ export class DigestionSystem {
       new THREE.MeshStandardMaterial({
         color,
         emissive: color,
-        emissiveIntensity: 0.25,
+        emissiveIntensity: 0.12,
         transparent: true,
-        opacity: 0.45,
+        opacity: 0.28,
         depthWrite: false,
       })
     )

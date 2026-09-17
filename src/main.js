@@ -175,6 +175,14 @@ function setupControls(scene) {
     state.simSpeed = Number(simSpeed.value)
   })
 
+  const skinMode = document.getElementById('skinMode')
+  if (skinMode) {
+    skinMode.value = state.skinMode || 'translucent'
+    skinMode.addEventListener('change', () => {
+      scene.body.setSkinMode(skinMode.value)
+    })
+  }
+
   document.querySelectorAll('.food-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
       const ok = scene.feed(btn.dataset.food)

@@ -22,18 +22,22 @@ export class AnatomyScene {
     this.renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2))
     this.renderer.setSize(canvas.clientWidth, canvas.clientHeight, false)
     this.renderer.outputColorSpace = THREE.SRGBColorSpace
+    this.renderer.toneMapping = THREE.ACESFilmicToneMapping
+    this.renderer.toneMappingExposure = 1.05
 
     this.scene = new THREE.Scene()
-    this.scene.fog = new THREE.FogExp2(0x0a101c, 0.045)
+    // Soft classroom / studio backdrop (no toy grid)
+    this.scene.background = new THREE.Color(0xc8d2de)
+    this.scene.fog = new THREE.Fog(0xc8d2de, 6, 16)
 
     this.camera = new THREE.PerspectiveCamera(
-      45,
+      42,
       canvas.clientWidth / Math.max(canvas.clientHeight, 1),
       0.1,
       100
     )
-    this.defaultCamPos = new THREE.Vector3(0.9, 1.15, 2.9)
-    this.defaultTarget = new THREE.Vector3(0, 0.75, 0)
+    this.defaultCamPos = new THREE.Vector3(0.95, 1.2, 2.85)
+    this.defaultTarget = new THREE.Vector3(0, 0.78, 0)
     this.camera.position.copy(this.defaultCamPos)
 
     this.controls = new OrbitControls(this.camera, canvas)
@@ -70,38 +74,53 @@ export class AnatomyScene {
   }
 
   _lights() {
-    const amb = new THREE.AmbientLight(0x8aa0c8, 0.55)
-    this.scene.add(amb)
+    // Soft studio key + fill + cool rim — calm educational lighting
+    const hemi = new THREE.HemisphereLight(0xf0f4fa, 0xb0a090, 0.55)
+    this.scene.add(hemi)
 
-    const key = new THREE.DirectionalLight(0xfff5e8, 1.15)
-    key.position.set(3, 5, 4)
+    const key = new THREE.DirectionalLight(0xfff6ea, 1.05)
+    key.position.set(2.8, 5.2, 3.5)
     this.scene.add(key)
 
-    const fill = new THREE.DirectionalLight(0x6a8cff, 0.4)
-    fill.position.set(-3, 2, -2)
+    const fill = new THREE.DirectionalLight(0xd8e4f8, 0.45)
+    fill.position.set(-3.2, 2.2, -1.5)
     this.scene.add(fill)
 
-    const rim = new THREE.PointLight(0x3ecf8e, 0.5, 8)
-    rim.position.set(0, 2, -2)
+    const rim = new THREE.DirectionalLight(0xe8f0ff, 0.35)
+    rim.position.set(0.5, 3.5, -3.5)
     this.scene.add(rim)
+
+    const soft = new THREE.PointLight(0xffe8d8, 0.25, 10)
+    soft.position.set(-0.5, 1.8, 2.2)
+    this.scene.add(soft)
   }
 
   _floor() {
-    const grid = new THREE.GridHelper(6, 24, 0x1e3a5f, 0x152238)
-    grid.position.y = -0.55
-    this.scene.add(grid)
-
+    // Simple soft ground disc — classroom mannequin stand
     const disc = new THREE.Mesh(
-      new THREE.CircleGeometry(1.2, 48),
+      new THREE.CircleGeometry(1.4, 64),
       new THREE.MeshStandardMaterial({
-        color: 0x101828,
-        roughness: 0.9,
-        metalness: 0.1,
+        color: 0xa8b4c4,
+        roughness: 0.92,
+        metalness: 0.04,
       })
     )
     disc.rotation.x = -Math.PI / 2
     disc.position.y = -0.549
     this.scene.add(disc)
+
+    const ring = new THREE.Mesh(
+      new THREE.RingGeometry(1.35, 1.55, 64),
+      new THREE.MeshStandardMaterial({
+        color: 0x96a4b6,
+        roughness: 0.95,
+        metalness: 0.02,
+        side: THREE.DoubleSide,
+      })
+    )
+    ring.rotation.x = -Math.PI / 2
+    ring.position.y = -0.548
+    this.scene.add(ring)
   }
 
   resize() {
@@ -232,7 +251,6 @@ export class AnatomyScene {
       if (u >= 1) this.focusTween = null
     }
 
-    // Keep float label glued to focused organ while orbiting
     if (state.focusedOrgan && !this._hoverId) {
       const focus = this.body.getOrganFocusTarget(state.focusedOrgan)
       if (focus) {

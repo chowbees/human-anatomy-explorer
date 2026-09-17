@@ -3,7 +3,7 @@
   "version": "1.0.0",
   "private": true,
   "type": "module",
-  "description": "Interactive 3D human anatomy explorer (educational, stylized)",
+  "description": "Interactive 3D human anatomy explorer (educational classroom model)",
   "scripts": {
     "dev": "vite",
     "build": "vite build",
