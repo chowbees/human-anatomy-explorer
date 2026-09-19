@@ -59,6 +59,9 @@ export class AnatomyScene {
     this.digestion = new DigestionSystem(this.scene, this.body, (msg, active) => {
       ui.setDigestionStatus(msg, active)
     })
+    this.digestion.onNutrients = (nutrients, stage, profile) => {
+      ui.setNutrientPanel?.(nutrients, stage, profile)
+    }
 
     this.raycaster = new THREE.Raycaster()
     this.pointer = new THREE.Vector2()
@@ -88,6 +91,8 @@ export class AnatomyScene {
     })
     this.ui.refreshOrganButtons?.(info)
     this.ui.syncSystemToggles?.(state.visibleSystems)
+    this.ui.syncSexUI?.(state.sex, this.body.mode)
+    this.ui.setInnerParts?.([])
     this._frameBody()
   }
 
@@ -174,7 +179,6 @@ export class AnatomyScene {
   }
 
   _pickVisible() {
-    // Prefer non-integumentary hits when both present
     const hits = this.raycaster.intersectObjects(this.body.organHitTargets, false)
     for (const h of hits) {
       const mesh = h.object
@@ -242,6 +246,29 @@ export class AnatomyScene {
     this.ui.setActiveOrgan(id)
     this.ui.setFloatLabel(focus.label, null, null, true)
     this._tweenCamera(focus.camera, focus.target, 0.85)
+
+    // Interior / cutaway + inner-parts panel
+    const items = this.body.enterInteriorView(id)
+    this.ui.setInnerParts?.(items || [], (item) => this.focusInnerPart(item))
+  }
+
+  focusInnerPart(item) {
+    if (!item) return
+    if (item.schematic) {
+      this.ui.setFocusLabel(`${item.label} — ${item.tip || 'Educational layer (schematic)'}`)
+      return
+    }
+    const focus = this.body.focusInnerPart(item)
+    if (focus) {
+      state.focusedOrgan = item.partId
+      this.ui.setFocusLabel(
+        focus.explanation ? `${focus.label} — ${focus.explanation}` : focus.label
+      )
+      this.ui.setActiveOrgan(item.partId)
+      this._tweenCamera(focus.camera, focus.target, 0.7)
+    } else if (item.tip) {
+      this.ui.setFocusLabel(`${item.label} — ${item.tip}`)
+    }
   }
 
   focusShortcut(shortcutId) {
@@ -252,21 +279,35 @@ export class AnatomyScene {
   zoomOut() {
     state.focusedOrgan = null
     this.body.clearHighlight()
+    this.body.clearInteriorView()
     this.ui.setFocusLabel('Full body view')
     this.ui.setActiveOrgan(null)
     this.ui.setFloatLabel(null)
+    this.ui.setInnerParts?.([])
     this._tweenCamera(this.defaultCamPos.clone(), this.defaultTarget.clone(), 0.9)
   }
 
-  _tweenCamera(toPos, toTarget, duration) {
-    this.focusTween = {
-      t: 0,
-      duration,
-      fromPos: this.camera.position.clone(),
-      toPos,
-      fromTarget: this.controls.target.clone(),
-      toTarget,
+  async setSex(sex) {
+    this._bodyReady = false
+    this.zoomOut()
+    // Stop any in-flight digestion when swapping datasets
+    if (state.digestion.active) {
+      state.digestion.active = false
+      state.digestion.stage = 'idle'
+      this.digestion._clearBolus?.()
+      this.digestion._clearPath?.()
+      this.digestion._clearParticles?.()
+      this.ui.setDigestionStatus('No active digestion', false)
+      this.ui.setNutrientPanel?.({}, 'idle', null)
     }
+    this.ui.setLoadProgress?.({
+      phase: 'chunks',
+      loaded: 0,
+      total: 1,
+      fraction: 0,
+      label: sex === 'female' ? 'Loading HuBMAP HRA female organs…' : 'Loading BodyParts3D atlas…',
+    })
+    await this.body.setSex(sex)
   }
 
   setSystems(systemIds) {
@@ -282,6 +323,17 @@ export class AnatomyScene {
 
   feed(food) {
     return this.digestion.start(food)
+  }
+
+  _tweenCamera(toPos, toTarget, duration) {
+    this.focusTween = {
+      t: 0,
+      duration,
+      fromPos: this.camera.position.clone(),
+      toPos,
+      fromTarget: this.controls.target.clone(),
+      toTarget,
+    }
   }
 
   _anim() {

@@ -1,10 +1,7 @@
-# Anatomy models
+# Models
 
-This app loads **BodyParts3D 4.0** at runtime from jsDelivr:
+- `hra-female-manifest.json` — lean HuBMAP HRA **female** organ CDN URLs (no binaries vendored).
+- Optional: `bp3d/` — local BodyParts3D atlas fallback (not committed by default).
 
-- Manifest: `https://cdn.jsdelivr.net/gh/ashemag/human-atlas@main/public/models/atlas.json`
-- Chunks: `body-0.bin.gz` … `body-14.bin.gz`
-
-Optional local fallback: place the same files under `public/models/bp3d/` if CDN/CORS is blocked. Do **not** commit ~60 MB uncompressed bins when the gzip CDN works.
-
-Attribution: BodyParts3D © DBCLS, CC BY 4.0; packaging via ashemag/human-atlas.
+Female GLBs load from `https://cdn.humanatlas.io/…` (CC BY 4.0).  
+Male atlas loads from jsDelivr `ashemag/human-atlas` (BodyParts3D CC BY 4.0).

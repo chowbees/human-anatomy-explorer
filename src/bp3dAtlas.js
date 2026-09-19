@@ -61,7 +61,7 @@ export const SYSTEMS = [
     name: 'Reproductive',
     color: '#bda098',
     kidsDefault: true,
-    description: 'Male reproductive structures in this adult-male reference atlas.',
+    description: 'Reproductive structures (male atlas on BodyParts3D; female organs via HRA when selected).',
   },
   {
     id: 'muscular',
@@ -150,6 +150,7 @@ export const FOCUS_SHORTCUTS = [
   { id: 'stomach', label: 'Stomach', match: (n) => n === 'Stomach' },
   { id: 'esophagus', label: 'Esophagus', match: (n) => n === 'Esophagus' },
   { id: 'heart', label: 'Heart', match: (n) => n === 'Wall of ventricle' },
+  { id: 'lung', label: 'Lungs', match: (n) => n === 'Left main bronchus' || n === 'Right main bronchus proper' },
   { id: 'brain', label: 'Brain', match: (n) => n === 'Cerebellum' },
   { id: 'kidneyL', label: 'Left kidney', match: (n) => n === 'Left kidney' },
   { id: 'kidneyR', label: 'Right kidney', match: (n) => n === 'Right kidney' },
@@ -227,4 +228,87 @@ export function explanationFor(part) {
   }
   if (tips[name]) return tips[name]
   return SYSTEM_BY_ID[part.system]?.description || ''
+}
+
+/**
+ * Named inner / related parts shown when focusing major organs (BodyParts3D).
+ * Prefer real atlas meshes (chambers, valves, lobes, nearby digestive parts).
+ */
+export const INNER_PART_GROUPS = {
+  heart: {
+    label: 'Heart',
+    seedMatch: (n) => n === 'Wall of ventricle',
+    parts: [
+      { label: 'Left ventricle cavity', match: (n) => n === 'Cavity of left ventricle', tip: 'Chamber that pumps blood to the body.' },
+      { label: 'Right ventricle cavity', match: (n) => n === 'Cavity of right ventricle', tip: 'Chamber that pumps blood to the lungs.' },
+      { label: 'Left atrium cavity', match: (n) => n === 'Cavity of left atrium', tip: 'Receives blood from the lungs.' },
+      { label: 'Right atrium cavity', match: (n) => n === 'Cavity of right atrium', tip: 'Receives blood from the body.' },
+      { label: 'Wall of left atrium', match: (n) => n === 'Wall of left atrium', tip: 'Muscular wall of the left atrium.' },
+      { label: 'Wall of right atrium', match: (n) => n === 'Wall of right atrium', tip: 'Muscular wall of the right atrium.' },
+      { label: 'Mitral valve (anterior)', match: (n) => n === 'Anterior leaflet of mitral valve', tip: 'Valve between left atrium and ventricle.' },
+      { label: 'Mitral valve (posterior)', match: (n) => n === 'Posterior leaflet of mitral valve', tip: 'Valve between left atrium and ventricle.' },
+      { label: 'Tricuspid valve (anterior)', match: (n) => n === 'Anterior leaflet of tricuspid valve', tip: 'Valve between right atrium and ventricle.' },
+      { label: 'Aortic valve cusp', match: (n) => n === 'Anterior cusp of aortic valve', tip: 'Valve into the aorta.' },
+      { label: 'Pulmonary valve cusp', match: (n) => n === 'Left anterior cusp of pulmonary valve', tip: 'Valve toward the lungs.' },
+    ],
+  },
+  stomach: {
+    label: 'Stomach',
+    seedMatch: (n) => n === 'Stomach',
+    parts: [
+      { label: 'Esophagus', match: (n) => n === 'Esophagus', tip: 'Tube that delivers food to the stomach.' },
+      { label: 'Duodenum', match: (n) => n === 'Duodenum', tip: 'First part of the small intestine.' },
+      { label: 'Pancreas', match: (n) => n === 'Pancreas', tip: 'Adds digestive enzymes nearby.' },
+      // Educational schematic layers (no separate BP3D meshes)
+      { label: 'Mucosa (inner lining)', schematic: true, tip: 'Inner lining that contacts food.' },
+      { label: 'Muscle layer', schematic: true, tip: 'Squeezes and mixes food.' },
+      { label: 'Outer wall', schematic: true, tip: 'Protective outer covering of the stomach.' },
+    ],
+  },
+  lung: {
+    label: 'Lungs',
+    seedMatch: (n) =>
+      n === 'Left main bronchus' || n === 'Right main bronchus proper' || n.includes('bronchial tree'),
+    conceptSides: { left: 'FMA7310', right: 'FMA7309' },
+    parts: [
+      { label: 'Trachea', match: (n) => n === 'Trachea', tip: 'Main airway to the lungs.' },
+      { label: 'Left main bronchus', match: (n) => n === 'Left main bronchus', tip: 'Airway into the left lung.' },
+      { label: 'Right main bronchus', match: (n) => n === 'Right main bronchus proper', tip: 'Airway into the right lung.' },
+      { label: 'Left upper lobe airways', match: (n) => n === 'Left apical segmental bronchial tree', tip: 'Airways in the left upper lobe.' },
+      { label: 'Left lower lobe airways', match: (n) => n === 'Left posterior basal segmental bronchial tree', tip: 'Airways in the left lower lobe.' },
+      { label: 'Right upper lobe airways', match: (n) => n === 'Right apical segmental bronchial tree', tip: 'Airways in the right upper lobe.' },
+      { label: 'Right middle lobe airways', match: (n) => n === 'Lateral segmental bronchial tree', tip: 'Airways in the right middle lobe.' },
+      { label: 'Right lower lobe airways', match: (n) => n === 'Right posterior basal segmental bronchial tree', tip: 'Airways in the right lower lobe.' },
+    ],
+  },
+  kidney: {
+    label: 'Kidney',
+    seedMatch: (n) => n === 'Left kidney' || n === 'Right kidney',
+    parts: [
+      { label: 'Left kidney', match: (n) => n === 'Left kidney', tip: 'Filters blood on the left side.' },
+      { label: 'Right kidney', match: (n) => n === 'Right kidney', tip: 'Filters blood on the right side.' },
+      { label: 'Cortex (schematic)', schematic: true, tip: 'Outer filtering zone (educational).' },
+      { label: 'Medulla (schematic)', schematic: true, tip: 'Inner collecting zone (educational).' },
+    ],
+  },
+}
+
+/** Resolve which INNER_PART_GROUPS key applies to a focused part name. */
+export function innerGroupForPartName(name) {
+  const n = (name || '').toLowerCase()
+  if (
+    n.includes('ventricle') ||
+    n.includes('atrium') ||
+    n.includes('valve') ||
+    n.includes('mitral') ||
+    n.includes('tricuspid') ||
+    n.includes('papillary') ||
+    n === 'wall of ventricle'
+  ) {
+    return 'heart'
+  }
+  if (n === 'stomach' || n === 'esophagus' || n === 'duodenum') return 'stomach'
+  if (n.includes('bronch') || n === 'trachea' || n.includes('lung')) return 'lung'
+  if (n.includes('kidney')) return 'kidney'
+  return null
 }

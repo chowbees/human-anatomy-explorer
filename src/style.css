@@ -617,3 +617,101 @@ button:active {
   text-transform: uppercase;
   color: var(--accent-dim);
 }
+
+/* Sex / female optional */
+.female-optional {
+  margin-top: 0.55rem;
+  padding-top: 0.45rem;
+  border-top: 1px solid var(--panel-border);
+}
+
+.female-optional.hidden,
+.nutrient-panel.hidden,
+.inner-parts-panel.hidden {
+  display: none;
+}
+
+/* Nutrient breakdown during digestion */
+.nutrient-panel {
+  margin-top: 0.65rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.28);
+  border: 1px solid var(--panel-border);
+}
+
+.nutrient-stage {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: var(--accent);
+  margin-bottom: 0.45rem;
+}
+
+.nutrient-bars {
+  display: flex;
+  flex-direction: column;
+  gap: 0.28rem;
+}
+
+.nutrient-row {
+  display: grid;
+  grid-template-columns: 4.5rem 1fr;
+  gap: 0.4rem;
+  align-items: center;
+  font-size: 0.72rem;
+  color: var(--muted);
+}
+
+.nutrient-row.lit .nutrient-label {
+  color: var(--text);
+}
+
+.nutrient-track {
+  height: 7px;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.08);
+  overflow: hidden;
+}
+
+.nutrient-fill {
+  height: 100%;
+  width: 0%;
+  border-radius: inherit;
+  transition: width 0.2s ease;
+}
+
+.nutrient-chips {
+  margin-top: 0.45rem;
+  font-size: 0.7rem;
+  color: #c5d0e6;
+  line-height: 1.35;
+}
+
+.nutrient-disclaimer {
+  margin: 0.4rem 0 0;
+  font-size: 0.65rem;
+  color: var(--muted);
+}
+
+/* Inner parts panel */
+.inner-parts-panel {
+  margin-top: 0.55rem;
+  padding: 0.5rem 0.15rem 0.15rem;
+  border-top: 1px dashed var(--panel-border);
+}
+
+.inner-part-btn {
+  font-size: 0.72rem;
+  padding: 0.35rem 0.5rem;
+  background: rgba(94, 196, 255, 0.08);
+  border-color: rgba(94, 196, 255, 0.35);
+}
+
+.inner-part-btn:hover {
+  background: rgba(94, 196, 255, 0.18);
+}
+
+.preset-btn:disabled {
+  opacity: 0.4;
+  cursor: not-allowed;
+}

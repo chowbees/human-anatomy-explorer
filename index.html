@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Interactive 3D human anatomy explorer for students — BodyParts3D full body atlas with skeleton, nerves, stomach, and major systems. Educational only, not medical advice." />
+    <meta name="description" content="Interactive 3D human anatomy explorer for students — BodyParts3D male atlas and HuBMAP HRA female organs. Educational only, not medical advice." />
     <title>Human Anatomy Explorer</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫀</text></svg>" />
   </head>
@@ -12,13 +12,20 @@
       <aside id="controls" class="panel">
         <header class="panel-header">
           <h1>Anatomy Explorer</h1>
-          <p class="subtitle">Classroom atlas · BodyParts3D 4.0</p>
+          <p class="subtitle">Classroom atlas · BodyParts3D + HuBMAP HRA</p>
         </header>
 
         <section class="control-group">
           <h2>Body</h2>
+          <label class="field">
+            <span>Sex</span>
+            <select id="sex">
+              <option value="male" selected>Male (BodyParts3D)</option>
+              <option value="female">Female (HuBMAP HRA)</option>
+            </select>
+          </label>
           <p class="ref-note" id="referenceNote">
-            Reference: <strong>adult male</strong> (BodyParts3D). Full skeleton, nerves, and stomach atlas is male-only — no fabricated female mesh.
+            Reference: <strong>adult male</strong> (BodyParts3D). Full skeleton, nerves, stomach, and all systems. Switch to Female for HuBMAP HRA organ models (CC BY).
           </p>
           <label class="field">
             <span>Health</span>
@@ -52,6 +59,11 @@
               <option value="solid">More opaque</option>
             </select>
           </label>
+          <div id="femaleOptional" class="female-optional hidden">
+            <p class="hint">Optional HRA models (larger downloads)</p>
+            <label class="check-field"><input type="checkbox" id="optEyes" /> Eyes</label>
+            <label class="check-field"><input type="checkbox" id="optVessels" /> Blood vasculature</label>
+          </div>
         </section>
 
         <section class="control-group">
@@ -79,19 +91,29 @@
 
         <section class="control-group">
           <h2>Eating simulation</h2>
-          <p class="hint">Bolus animates along esophagus → stomach → intestines (stylized).</p>
+          <p class="hint">Each food releases different nutrients along the path (stylized / educational).</p>
           <div class="btn-row">
-            <button type="button" class="food-btn" data-food="spinach" title="Leafy greens — light energy, faster gut activity">🥬 Spinach</button>
-            <button type="button" class="food-btn" data-food="rice" title="Carbs — moderate energy, steady digestion">🍚 Rice</button>
-            <button type="button" class="food-btn" data-food="meat" title="Protein — high energy, longer digestion">🥩 Meat</button>
+            <button type="button" class="food-btn" data-food="spinach" title="Vitamins A,K,C,folate · iron · fiber · low energy">🥬 Spinach</button>
+            <button type="button" class="food-btn" data-food="rice" title="Carbs → energy · some B vitamins">🍚 Rice</button>
+            <button type="button" class="food-btn" data-food="meat" title="Protein · fats → energy · iron · B12">🥩 Meat</button>
           </div>
           <div id="digestionStatus" class="status-box" aria-live="polite">No active digestion</div>
+          <div id="nutrientPanel" class="nutrient-panel hidden" aria-live="polite">
+            <div class="nutrient-stage" id="nutrientStage">—</div>
+            <div id="nutrientBars" class="nutrient-bars"></div>
+            <div id="nutrientChips" class="nutrient-chips"></div>
+            <p class="nutrient-disclaimer">Educational model — not a clinical nutrient assay.</p>
+          </div>
         </section>
 
         <section class="control-group organ-panel">
           <h2>Explore</h2>
-          <p class="hint">Hover or click any part in the 3D view for its name. Shortcuts below jump to key structures.</p>
+          <p class="hint">Hover or click any part. Zooming an organ reveals inner parts / cutaway layers.</p>
           <div id="organButtons" class="organ-buttons-scroll"></div>
+          <div id="innerPartsPanel" class="inner-parts-panel hidden">
+            <h3 class="focus-heading">Inner parts</h3>
+            <div id="innerPartsList" class="btn-row wrap"></div>
+          </div>
           <button type="button" id="zoomOut" class="secondary full">Zoom out (full body)</button>
         </section>
 
@@ -106,13 +128,14 @@
         </section>
 
         <footer class="panel-footer">
-          <p class="attribution">
+          <p class="attribution" id="attributionBlock">
             Anatomy:
             <strong>BodyParts3D</strong> ©
             <a href="https://dbcls.rois.ac.jp/index-en.html" target="_blank" rel="noopener noreferrer">DBCLS</a>,
             <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
             Geometry packaging via
             <a href="https://github.com/ashemag/human-atlas" target="_blank" rel="noopener noreferrer">ashemag/human-atlas</a>.
+            Female uses HuBMAP HRA when selected.
           </p>
           <button type="button" id="showDisclaimer" class="linkish">Medical disclaimer</button>
         </footer>
@@ -131,7 +154,7 @@
             <div id="loadLabel" class="load-label">Fetching BodyParts3D…</div>
             <div class="load-track"><div id="loadBar" class="load-bar"></div></div>
             <div id="loadPct" class="load-pct">0%</div>
-            <p class="load-note">15 geometry chunks load in parallel from jsDelivr (~33&nbsp;MB gzip). Includes skeleton, nerves, stomach, and all major systems.</p>
+            <p class="load-note">Male: 15 BodyParts3D chunks from jsDelivr. Female: HuBMAP HRA organ GLBs from CDN (CC BY).</p>
           </div>
         </div>
         <button type="button" id="togglePanel" class="mobile-toggle" aria-label="Toggle controls">☰</button>
@@ -146,15 +169,17 @@
           It is <strong>not medical advice</strong>, diagnosis, or treatment guidance.
         </p>
         <p>
-          Anatomy, organ placement, blood flow, and digestion reactions are <strong>simplified for learning</strong>.
+          Anatomy, organ placement, blood flow, digestion, and nutrient breakdowns are <strong>simplified for learning</strong>.
           Real human physiology and individual reactions to food can differ substantially.
         </p>
         <p>
-          3D meshes are from <strong>BodyParts3D</strong> ©
-          <a href="https://dbcls.rois.ac.jp/index-en.html" target="_blank" rel="noopener noreferrer">DBCLS</a>,
-          licensed <strong>CC BY 4.0</strong>. Browser-ready packaging adapted from
-          <a href="https://github.com/ashemag/human-atlas" target="_blank" rel="noopener noreferrer">ashemag/human-atlas</a>.
-          This atlas is an <strong>adult male</strong> reference body.
+          <strong>Male</strong> meshes are from <strong>BodyParts3D</strong> ©
+          <a href="https://dbcls.rois.ac.jp/index-en.html" target="_blank" rel="noopener noreferrer">DBCLS</a>
+          (<strong>CC BY 4.0</strong>).
+          <strong>Female</strong> organs are from the <strong>HuBMAP Human Reference Atlas</strong>
+          (<a href="https://humanatlas.io/3d-reference-library" target="_blank" rel="noopener noreferrer">3D Reference Library</a>
+          (<strong>CC BY 4.0</strong>.
+          The full skeleton + nerves atlas is richest on male (BodyParts3D).
         </p>
         <p>
           Always consult a qualified healthcare professional for medical concerns.
