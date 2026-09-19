@@ -3,7 +3,7 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <meta name="description" content="Interactive 3D human anatomy explorer for students — HuBMAP HRA reference organs, educational study model, not medical advice." />
+    <meta name="description" content="Interactive 3D human anatomy explorer for students — BodyParts3D full body atlas with skeleton, nerves, stomach, and major systems. Educational only, not medical advice." />
     <title>Human Anatomy Explorer</title>
     <link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🫀</text></svg>" />
   </head>
@@ -12,18 +12,14 @@
       <aside id="controls" class="panel">
         <header class="panel-header">
           <h1>Anatomy Explorer</h1>
-          <p class="subtitle">Educational · HuBMAP HRA 3D organs</p>
+          <p class="subtitle">Classroom atlas · BodyParts3D 4.0</p>
         </header>
 
         <section class="control-group">
           <h2>Body</h2>
-          <label class="field">
-            <span>Sex</span>
-            <select id="sex">
-              <option value="male">Male</option>
-              <option value="female">Female</option>
-            </select>
-          </label>
+          <p class="ref-note" id="referenceNote">
+            Reference: <strong>adult male</strong> (BodyParts3D). Full skeleton, nerves, and stomach atlas is male-only — no fabricated female mesh.
+          </p>
           <label class="field">
             <span>Health</span>
             <select id="health">
@@ -49,31 +45,41 @@
             </select>
           </label>
           <label class="field">
-            <span>Outer body (skin)</span>
+            <span>Body surface (skin)</span>
             <select id="skinMode">
-              <option value="translucent" selected>Translucent (organs visible)</option>
+              <option value="hidden" selected>Hidden (organs clearer)</option>
+              <option value="translucent">Translucent</option>
               <option value="solid">More opaque</option>
-              <option value="hidden">Hidden (organs only)</option>
             </select>
           </label>
         </section>
 
         <section class="control-group">
-          <h2>Optional models</h2>
-          <p class="hint">Deferred large CDN assets — load when needed.</p>
-          <label class="check-field">
-            <input type="checkbox" id="optVasculature" />
-            <span>Blood vasculature (~18&nbsp;MB)</span>
-          </label>
-          <label class="check-field">
-            <input type="checkbox" id="optEyes" />
-            <span>Eyes (~20–27&nbsp;MB each)</span>
-          </label>
+          <h2>Study presets</h2>
+          <p class="hint">Don’t show everything at once — pick a view.</p>
+          <div class="btn-row wrap">
+            <button type="button" class="preset-btn" data-preset="organs">Organs</button>
+            <button type="button" class="preset-btn" data-preset="skeleton">Skeleton</button>
+            <button type="button" class="preset-btn" data-preset="nerves">Nerves</button>
+            <button type="button" class="preset-btn active" data-preset="full">Full systems</button>
+          </div>
+        </section>
+
+        <section class="control-group">
+          <h2>Systems (default)</h2>
+          <p class="hint">Skeleton, nerves, digestive (incl. stomach), and other study systems.</p>
+          <div id="systemDefaults" class="sys-list"></div>
+        </section>
+
+        <section class="control-group">
+          <h2>Optional systems</h2>
+          <p class="hint">Muscles &amp; vessels are dense — toggle when needed.</p>
+          <div id="systemOptional" class="sys-list"></div>
         </section>
 
         <section class="control-group">
           <h2>Eating simulation</h2>
-          <p class="hint">Stylized educational reactions — not clinical claims.</p>
+          <p class="hint">Bolus animates along esophagus → stomach → intestines (stylized).</p>
           <div class="btn-row">
             <button type="button" class="food-btn" data-food="spinach" title="Leafy greens — light energy, faster gut activity">🥬 Spinach</button>
             <button type="button" class="food-btn" data-food="rice" title="Carbs — moderate energy, steady digestion">🍚 Rice</button>
@@ -83,8 +89,8 @@
         </section>
 
         <section class="control-group organ-panel">
-          <h2>Organs</h2>
-          <p class="hint">Click an organ in the scene or below to focus. Grouped by region.</p>
+          <h2>Explore</h2>
+          <p class="hint">Hover or click any part in the 3D view for its name. Shortcuts below jump to key structures.</p>
           <div id="organButtons" class="organ-buttons-scroll"></div>
           <button type="button" id="zoomOut" class="secondary full">Zoom out (full body)</button>
         </section>
@@ -101,9 +107,12 @@
 
         <footer class="panel-footer">
           <p class="attribution">
-            3D organs:
-            <a href="https://humanatlas.io/3d-reference-library" target="_blank" rel="noopener noreferrer">HuBMAP Human Reference Atlas</a>
-            (CC BY 4.0)
+            Anatomy:
+            <strong>BodyParts3D</strong> ©
+            <a href="https://dbcls.rois.ac.jp/index-en.html" target="_blank" rel="noopener noreferrer">DBCLS</a>,
+            <a href="https://creativecommons.org/licenses/by/4.0/" target="_blank" rel="noopener noreferrer">CC BY 4.0</a>.
+            Geometry packaging via
+            <a href="https://github.com/ashemag/human-atlas" target="_blank" rel="noopener noreferrer">ashemag/human-atlas</a>.
           </p>
           <button type="button" id="showDisclaimer" class="linkish">Medical disclaimer</button>
         </footer>
@@ -114,15 +123,15 @@
         <div id="organFloatLabel" class="hidden" aria-hidden="true"></div>
         <div id="hud">
           <div id="focusLabel">Full body view</div>
-          <div id="tip">Drag to orbit · Scroll to zoom · Hover / click organs</div>
+          <div id="tip">Drag to orbit · Scroll to zoom · Hover / click any structure</div>
         </div>
         <div id="loadOverlay" aria-live="polite">
           <div class="load-card">
-            <div class="load-title">Loading anatomy models</div>
-            <div id="loadLabel" class="load-label">Fetching HuBMAP HRA models…</div>
+            <div class="load-title">Loading anatomy atlas</div>
+            <div id="loadLabel" class="load-label">Fetching BodyParts3D…</div>
             <div class="load-track"><div id="loadBar" class="load-bar"></div></div>
             <div id="loadPct" class="load-pct">0%</div>
-            <p class="load-note">Core organs load first from the HuBMAP CDN (not bundled). Mouth model is skipped (too large).</p>
+            <p class="load-note">15 geometry chunks load in parallel from jsDelivr (~33&nbsp;MB gzip). Includes skeleton, nerves, stomach, and all major systems.</p>
           </div>
         </div>
         <button type="button" id="togglePanel" class="mobile-toggle" aria-label="Toggle controls">☰</button>
@@ -141,10 +150,11 @@
           Real human physiology and individual reactions to food can differ substantially.
         </p>
         <p>
-          3D organ meshes are from the
-          <strong>HuBMAP Human Reference Atlas 3D Reference Object Library</strong>
-          (<a href="https://humanatlas.io/3d-reference-library" target="_blank" rel="noopener noreferrer">humanatlas.io/3d-reference-library</a>),
-          licensed under <strong>CC BY 4.0</strong>. Models load from the HuBMAP CDN at runtime.
+          3D meshes are from <strong>BodyParts3D</strong> ©
+          <a href="https://dbcls.rois.ac.jp/index-en.html" target="_blank" rel="noopener noreferrer">DBCLS</a>,
+          licensed <strong>CC BY 4.0</strong>. Browser-ready packaging adapted from
+          <a href="https://github.com/ashemag/human-atlas" target="_blank" rel="noopener noreferrer">ashemag/human-atlas</a>.
+          This atlas is an <strong>adult male</strong> reference body.
         </p>
         <p>
           Always consult a qualified healthcare professional for medical concerns.

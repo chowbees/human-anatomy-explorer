@@ -3,7 +3,7 @@ import { state } from './state.js'
 
 /**
  * Subtle blood-flow particles along a path derived from heart → body landmarks.
- * When HRA vasculature is loaded, it is shown as the vessel mesh; particles still run.
+ * When arterial/venous systems are on, BP3D vessels show; otherwise a simple guide path.
  */
 export class BloodFlow {
   constructor(scene, body) {
@@ -53,19 +53,9 @@ export class BloodFlow {
   _buildVesselTubes() {
     this._clearGuideTubes()
 
-    // If HRA vasculature GLB is present, skip synthetic tubes (mesh is the vessel)
-    if (this.body.organMeshes.vasculature) {
-      const vas = this.body.organMeshes.vasculature
-      vas.traverse((c) => {
-        if (!c.isMesh || !c.material) return
-        const mats = Array.isArray(c.material) ? c.material : [c.material]
-        for (const mat of mats) {
-          mat.transparent = true
-          mat.opacity = Math.min(mat.opacity ?? 1, 0.55)
-          mat.depthWrite = false
-          if (mat.color) mat.color.lerp(new THREE.Color(0x8a3038), 0.35)
-        }
-      })
+    // Skip synthetic tubes when arterial/venous systems are visible (BP3D vessels)
+    const systems = (typeof state !== 'undefined' && state.visibleSystems) || []
+    if (systems.includes('arterial') || systems.includes('venous')) {
       return
     }
 

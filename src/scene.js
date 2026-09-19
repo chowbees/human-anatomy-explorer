@@ -86,8 +86,8 @@ export class AnatomyScene {
       fraction: 1,
       label: 'Ready',
     })
-    this.ui.refreshOrganButtons?.(info.organs || this.body.listOrganIds())
-    // Frame the assembled body
+    this.ui.refreshOrganButtons?.(info)
+    this.ui.syncSystemToggles?.(state.visibleSystems)
     this._frameBody()
   }
 
@@ -103,7 +103,6 @@ export class AnatomyScene {
       this.camera.position.copy(this.defaultCamPos)
       this.controls.target.copy(this.defaultTarget)
     }
-    // Floor under feet
     if (this._floorMesh) {
       this._floorMesh.position.y = box.min.y - 0.002
       this._floorRing.position.y = box.min.y - 0.001
@@ -174,24 +173,35 @@ export class AnatomyScene {
     return rect
   }
 
+  _pickVisible() {
+    // Prefer non-integumentary hits when both present
+    const hits = this.raycaster.intersectObjects(this.body.organHitTargets, false)
+    for (const h of hits) {
+      const mesh = h.object
+      if (!mesh.visible) continue
+      if (mesh.userData.system === 'integumentary') continue
+      return mesh.userData.organId
+    }
+    for (const h of hits) {
+      if (h.object.visible) return h.object.userData.organId
+    }
+    return null
+  }
+
   _onPointer(e) {
     if (!this._bodyReady) return
     this._setPointer(e)
     this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
-    if (hits.length) {
-      const id = hits[0].object.userData.organId
-      if (id) this.focusOrgan(id)
-    }
+    const id = this._pickVisible()
+    if (id) this.focusOrgan(id)
   }
 
   _onHover(e) {
     if (!this._bodyReady) return
     const rect = this._setPointer(e)
     this.raycaster.setFromCamera(this.pointer, this.camera)
-    const hits = this.raycaster.intersectObjects(this.body.organHitTargets, true)
-    if (hits.length) {
-      const id = hits[0].object.userData.organId
+    const id = this._pickVisible()
+    if (id) {
       this._hoverId = id
       const focus = this.body.getOrganFocusTarget(id)
       if (focus) {
@@ -225,10 +235,18 @@ export class AnatomyScene {
     if (!focus) return
     state.focusedOrgan = id
     this.body.highlightOrgan(id)
-    this.ui.setFocusLabel(focus.label)
+    const detail = focus.explanation
+      ? `${focus.label} — ${focus.explanation}`
+      : focus.label
+    this.ui.setFocusLabel(detail)
     this.ui.setActiveOrgan(id)
     this.ui.setFloatLabel(focus.label, null, null, true)
     this._tweenCamera(focus.camera, focus.target, 0.85)
+  }
+
+  focusShortcut(shortcutId) {
+    const id = this.body.resolveShortcut(shortcutId)
+    if (id) this.focusOrgan(id)
   }
 
   zoomOut() {
@@ -241,46 +259,25 @@ export class AnatomyScene {
   }
 
   _tweenCamera(toPos, toTarget, duration) {
-    const fromPos = this.camera.position.clone()
-    const fromTarget = this.controls.target.clone()
     this.focusTween = {
       t: 0,
       duration,
-      fromPos,
+      fromPos: this.camera.position.clone(),
       toPos,
-      fromTarget,
+      fromTarget: this.controls.target.clone(),
       toTarget,
     }
   }
 
-  async setSex(sex) {
-    this._bodyReady = false
-    this.ui.setLoadProgress?.({
-      phase: 'core',
-      loaded: 0,
-      total: 1,
-      fraction: 0,
-      label: `Loading ${sex} HRA organs…`,
-    })
-    await this.body.setSex(sex)
-    // onReady handles blood rebuild + buttons
-    if (state.focusedOrgan && this.body.organMeshes[state.focusedOrgan]) {
-      this.focusOrgan(state.focusedOrgan)
-    } else {
-      this.zoomOut()
-    }
+  setSystems(systemIds) {
+    this.body.applyVisibleSystems(systemIds)
+    this.ui.syncSystemToggles?.(state.visibleSystems)
+    this.blood.rebuild()
   }
 
-  async setOptional(kind, enabled) {
-    this.ui.setLoadProgress?.({
-      phase: `optional:${kind}`,
-      loaded: 0,
-      total: 1,
-      fraction: 0,
-      label: enabled ? `Loading ${kind}…` : `Removing ${kind}…`,
-    })
-    await this.body.setOptional(kind, enabled)
-    this.blood.rebuild()
+  setSystem(systemId, enabled) {
+    this.body.setSystemVisible(systemId, enabled)
+    this.ui.syncSystemToggles?.(state.visibleSystems)
   }
 
   feed(food) {

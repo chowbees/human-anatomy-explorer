@@ -2,8 +2,8 @@ import * as THREE from 'three'
 import { state, FOOD_PROFILES } from './state.js'
 
 /**
- * Eating simulation: food bolus travels mouth → gut path derived from HRA organs.
- * Reactions are stylized / educational only.
+ * Eating simulation: food bolus travels esophagus → stomach → intestines
+ * using BodyParts3D part centers. Reactions are stylized / educational only.
  */
 export class DigestionSystem {
   constructor(scene, body, onStatus) {
@@ -22,7 +22,6 @@ export class DigestionSystem {
     const profile = FOOD_PROFILES[foodKey]
     if (!profile || state.digestion.active) return false
 
-    // Refresh path from current organ positions
     this.body.digestPath = this.body._buildDigestPath()
 
     state.digestion = {
@@ -95,16 +94,32 @@ export class DigestionSystem {
   }
 
   _stageFromProgress(p) {
-    if (p < 0.12) return 'mouth'
-    if (p < 0.28) return 'esophagus'
-    if (p < 0.48) return 'stomach'
-    if (p < 0.75) return 'smallIntestine'
+    if (p < 0.1) return 'mouth'
+    if (p < 0.22) return 'esophagus'
+    if (p < 0.42) return 'stomach'
+    if (p < 0.72) return 'smallIntestine'
     if (p < 0.95) return 'largeIntestine'
     return 'complete'
   }
 
   _setStatus(msg) {
     if (this.onStatus) this.onStatus(msg, true)
+  }
+
+  _highlightDigestStage(stage) {
+    const map = {
+      esophagus: 'Esophagus',
+      stomach: 'Stomach',
+      smallIntestine: 'Duodenum',
+      largeIntestine: 'Transverse colon',
+    }
+    const name = map[stage]
+    if (!name) {
+      this.body.clearHighlight()
+      return
+    }
+    const id = this.body.findPartByExactName(name)
+    if (id) this.body.highlightOrgan(id)
   }
 
   update(dt) {
@@ -125,12 +140,13 @@ export class DigestionSystem {
       const labels = {
         mouth: 'in mouth',
         esophagus: 'descending esophagus',
-        stomach: 'in stomach region',
+        stomach: 'in stomach',
         smallIntestine: 'in small intestine',
         largeIntestine: 'in large intestine',
         complete: 'digestion complete',
       }
       this._setStatus(`${profile.label}: ${labels[stage]}… (${profile.note})`)
+      this._highlightDigestStage(stage)
     }
 
     const ease = Math.sin(d.progress * Math.PI)
@@ -152,13 +168,6 @@ export class DigestionSystem {
       const pulse = 1 + 0.15 * Math.sin(d.elapsed * 6)
       this.bolus.scale.setScalar(pulse * (1.15 - d.progress * 0.45))
     }
-
-    // Highlight available HRA organs along the stylized path
-    if (stage === 'stomach' || stage === 'esophagus') {
-      if (this.body.organMeshes.liver) this.body.highlightOrgan('liver')
-      else if (this.body.organMeshes.larynx) this.body.highlightOrgan('larynx')
-    } else if (stage === 'smallIntestine') this.body.highlightOrgan('smallIntestine')
-    else if (stage === 'largeIntestine') this.body.highlightOrgan('largeIntestine')
 
     if (d.progress >= 1) {
       d.active = false

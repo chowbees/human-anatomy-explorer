@@ -490,7 +490,7 @@ button:active {
   color: var(--accent);
 }
 
-/* HRA CDN loading overlay */
+/* Loading overlay */
 #loadOverlay {
   position: absolute;
   inset: 0;
@@ -562,4 +562,58 @@ button:active {
   font-size: 0.7rem;
   color: var(--muted);
   line-height: 1.35;
+}
+
+/* BodyParts3D systems UI */
+.ref-note {
+  margin: 0 0 0.75rem;
+  padding: 0.55rem 0.65rem;
+  border-radius: 8px;
+  background: rgba(230, 192, 123, 0.12);
+  border: 1px solid rgba(230, 192, 123, 0.35);
+  font-size: 0.78rem;
+  color: #e6d3a8;
+  line-height: 1.4;
+}
+
+.preset-btn {
+  font-size: 0.78rem;
+  padding: 0.4rem 0.6rem;
+}
+
+.preset-btn.active {
+  border-color: var(--accent);
+  background: rgba(62, 207, 142, 0.15);
+  color: var(--accent);
+}
+
+.sys-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.2rem;
+  max-height: 220px;
+  overflow-y: auto;
+  scrollbar-width: thin;
+}
+
+.sys-swatch {
+  display: inline-block;
+  width: 0.7rem;
+  height: 0.7rem;
+  border-radius: 3px;
+  flex-shrink: 0;
+  border: 1px solid rgba(255, 255, 255, 0.2);
+}
+
+.check-field {
+  gap: 0.45rem;
+}
+
+.focus-heading {
+  margin: 0 0 0.35rem;
+  font-size: 0.7rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--accent-dim);
 }

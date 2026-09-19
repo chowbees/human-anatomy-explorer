@@ -1,11 +1,10 @@
-# Models
+# Anatomy models
 
-Organ meshes come from the **HuBMAP Human Reference Atlas 3D Reference Object Library** (**CC BY 4.0**).
+This app loads **BodyParts3D 4.0** at runtime from jsDelivr:
 
-- https://humanatlas.io/3d-reference-library
-- API: https://apps.humanatlas.io/api/v1/reference-organs
-- CDN: `https://cdn.humanatlas.io/digital-objects/ref-organ/.../*.glb`
+- Manifest: `https://cdn.jsdelivr.net/gh/ashemag/human-atlas@main/public/models/atlas.json`
+- Chunks: `body-0.bin.gz` … `body-14.bin.gz`
 
-`hra-manifest.json` lists labels, sex, and CDN file URLs. **GLB files are not vendored** — the app loads them at runtime with a progress UI.
+Optional local fallback: place the same files under `public/models/bp3d/` if CDN/CORS is blocked. Do **not** commit ~60 MB uncompressed bins when the gzip CDN works.
 
-Mouth is intentionally never loaded (very large). Eyes and blood vasculature are optional toggles.
+Attribution: BodyParts3D © DBCLS, CC BY 4.0; packaging via ashemag/human-atlas.

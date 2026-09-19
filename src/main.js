@@ -1,11 +1,9 @@
 import './style.css'
 import { AnatomyScene } from './scene.js'
 import { state, applyHealth } from './state.js'
-import { ORGAN_META, SYSTEM_LABELS } from './body.js'
+import { SYSTEMS, PRESETS, FOCUS_SHORTCUTS, DEFAULT_VISIBLE } from './bp3dAtlas.js'
 
-const DISCLAIMER_KEY = 'anatomy-explorer-disclaimer-ack-v2'
-
-const SYSTEM_ORDER = ['head', 'chest', 'abdomen', 'pelvis']
+const DISCLAIMER_KEY = 'anatomy-explorer-disclaimer-ack-v3'
 
 const ui = {
   setDigestionStatus(msg, active) {
@@ -18,7 +16,8 @@ const ui = {
   },
   setActiveOrgan(id) {
     document.querySelectorAll('.organ-btn').forEach((b) => {
-      b.classList.toggle('active', b.dataset.organ === id)
+      // shortcut buttons: mark active if resolved part matches later — simple: clear all
+      b.classList.toggle('active', b.dataset.part === id)
     })
   },
   setFloatLabel(text, x, y, pinned) {
@@ -32,8 +31,6 @@ const ui = {
     el.classList.remove('hidden')
     if (x != null && y != null) {
       el.style.transform = `translate(${x}px, ${y}px) translate(-50%, -120%)`
-    } else if (pinned) {
-      // Keep previous position until next hover/frame update
     }
   },
   updateReadouts() {
@@ -58,8 +55,14 @@ const ui = {
       b.disabled = !enabled
     })
   },
-  refreshOrganButtons(presentIds) {
-    buildOrganButtons(presentIds, window.__anatomy?.scene)
+  refreshOrganButtons() {
+    buildFocusButtons(window.__anatomy?.scene)
+  },
+  syncSystemToggles(visible) {
+    const set = new Set(visible || state.visibleSystems)
+    document.querySelectorAll('[data-system]').forEach((el) => {
+      if (el.type === 'checkbox') el.checked = set.has(el.dataset.system)
+    })
   },
   setLoadProgress(p) {
     const overlay = document.getElementById('loadOverlay')
@@ -84,56 +87,58 @@ const ui = {
     const frac = Math.max(0, Math.min(1, p.fraction || 0))
     bar.style.width = `${(frac * 100).toFixed(1)}%`
     pct.textContent = `${Math.round(frac * 100)}%`
-    const phaseLabel =
-      p.phase === 'core'
-        ? 'Loading HRA organs'
-        : p.phase?.startsWith('optional')
-          ? `Loading ${p.phase.split(':')[1] || 'optional'}`
-          : 'Loading'
-    label.textContent = p.label ? `${phaseLabel}: ${p.label}` : phaseLabel
+    label.textContent = p.label
+      ? `Loading BodyParts3D: ${p.label}`
+      : 'Loading BodyParts3D atlas…'
   },
 }
 
-function buildOrganButtons(presentIds, scene) {
+function buildFocusButtons(scene) {
   const container = document.getElementById('organButtons')
+  if (!container) return
   container.innerHTML = ''
-  const present = new Set(
-    presentIds ||
-      Object.keys(ORGAN_META).filter((id) => {
-        const meta = ORGAN_META[id]
-        return !meta.sex || meta.sex === state.sex
-      })
-  )
 
-  for (const sys of SYSTEM_ORDER) {
-    const groupIds = Object.entries(ORGAN_META)
-      .filter(([id, meta]) => meta.system === sys && present.has(id))
-      .map(([id]) => id)
-    if (!groupIds.length) continue
+  const title = document.createElement('h3')
+  title.className = 'focus-heading'
+  title.textContent = 'Quick focus'
+  container.appendChild(title)
 
-    const group = document.createElement('div')
-    group.className = 'organ-group'
-    const title = document.createElement('h3')
-    title.textContent = SYSTEM_LABELS[sys] || sys
-    group.appendChild(title)
-
-    const row = document.createElement('div')
-    row.className = 'btn-row wrap'
-    for (const id of groupIds) {
-      const btn = document.createElement('button')
-      btn.type = 'button'
-      btn.className = 'organ-btn'
-      btn.dataset.organ = id
-      btn.textContent = ORGAN_META[id].name
-      btn.addEventListener('click', () => scene?.focusOrgan(id))
-      row.appendChild(btn)
-    }
-    group.appendChild(row)
-    container.appendChild(group)
+  const row = document.createElement('div')
+  row.className = 'btn-row wrap'
+  for (const sc of FOCUS_SHORTCUTS) {
+    const btn = document.createElement('button')
+    btn.type = 'button'
+    btn.className = 'organ-btn'
+    btn.dataset.shortcut = sc.id
+    btn.textContent = sc.label
+    btn.addEventListener('click', () => scene?.focusShortcut(sc.id))
+    row.appendChild(btn)
   }
+  container.appendChild(row)
+}
 
-  if (state.focusedOrgan) {
-    ui.setActiveOrgan(state.focusedOrgan)
+function buildSystemToggles() {
+  const defaultsEl = document.getElementById('systemDefaults')
+  const optionalEl = document.getElementById('systemOptional')
+  if (!defaultsEl || !optionalEl) return
+  defaultsEl.innerHTML = ''
+  optionalEl.innerHTML = ''
+
+  for (const s of SYSTEMS) {
+    const label = document.createElement('label')
+    label.className = 'check-field'
+    const input = document.createElement('input')
+    input.type = 'checkbox'
+    input.dataset.system = s.id
+    input.checked = state.visibleSystems.includes(s.id)
+    const swatch = document.createElement('span')
+    swatch.className = 'sys-swatch'
+    swatch.style.background = s.color
+    const text = document.createElement('span')
+    text.textContent = s.name
+    label.append(input, swatch, text)
+    label.title = s.description
+    ;(s.kidsDefault ? defaultsEl : optionalEl).appendChild(label)
   }
 }
 
@@ -144,9 +149,7 @@ function setupDisclaimer() {
   const showBtn = document.getElementById('showDisclaimer')
 
   const acknowledged = localStorage.getItem(DISCLAIMER_KEY) === '1'
-  if (acknowledged) {
-    modal.classList.add('hidden')
-  }
+  if (acknowledged) modal.classList.add('hidden')
 
   ackCheck.addEventListener('change', () => {
     ackBtn.disabled = !ackCheck.checked
@@ -166,7 +169,6 @@ function setupDisclaimer() {
 }
 
 function setupControls(scene) {
-  const sex = document.getElementById('sex')
   const health = document.getElementById('health')
   const height = document.getElementById('height')
   const weight = document.getElementById('weight')
@@ -174,21 +176,11 @@ function setupControls(scene) {
   const heightVal = document.getElementById('heightVal')
   const weightVal = document.getElementById('weightVal')
 
-  sex.value = state.sex
   health.value = state.health
   height.value = String(state.heightCm)
   weight.value = String(state.weightKg)
   heightVal.textContent = `${state.heightCm} cm`
   weightVal.textContent = `${state.weightKg} kg`
-
-  sex.addEventListener('change', () => {
-    // Optional assets are sex-specific; clear toggles on reload
-    const optV = document.getElementById('optVasculature')
-    const optE = document.getElementById('optEyes')
-    if (optV) optV.checked = false
-    if (optE) optE.checked = false
-    scene.setSex(sex.value)
-  })
 
   health.addEventListener('change', () => {
     applyHealth(health.value)
@@ -216,24 +208,35 @@ function setupControls(scene) {
 
   const skinMode = document.getElementById('skinMode')
   if (skinMode) {
-    skinMode.value = state.skinMode || 'translucent'
+    skinMode.value = state.skinMode || 'hidden'
     skinMode.addEventListener('change', () => {
       scene.body.setSkinMode(skinMode.value)
+      ui.syncSystemToggles(state.visibleSystems)
     })
   }
 
-  const optVessels = document.getElementById('optVasculature')
-  if (optVessels) {
-    optVessels.addEventListener('change', () => {
-      scene.setOptional('vasculature', optVessels.checked)
+  // Presets
+  document.querySelectorAll('[data-preset]').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      const key = btn.dataset.preset
+      const preset = PRESETS[key]
+      if (!preset) return
+      document.querySelectorAll('[data-preset]').forEach((b) => b.classList.remove('active'))
+      btn.classList.add('active')
+      scene.setSystems(preset.systems.slice())
     })
+  })
+
+  // System checkboxes (delegated)
+  const onSystemChange = (e) => {
+    const t = e.target
+    if (t?.dataset?.system) {
+      scene.setSystem(t.dataset.system, t.checked)
+      document.querySelectorAll('[data-preset]').forEach((b) => b.classList.remove('active'))
+    }
   }
-  const optEyes = document.getElementById('optEyes')
-  if (optEyes) {
-    optEyes.addEventListener('change', () => {
-      scene.setOptional('eyes', optEyes.checked)
-    })
-  }
+  document.getElementById('systemDefaults')?.addEventListener('change', onSystemChange)
+  document.getElementById('systemOptional')?.addEventListener('change', onSystemChange)
 
   document.querySelectorAll('.food-btn').forEach((btn) => {
     btn.addEventListener('click', () => {
@@ -257,12 +260,13 @@ function setupControls(scene) {
     panel.classList.toggle('open')
   })
 
-  // Organ buttons filled when HRA core load completes
-  buildOrganButtons([], scene)
+  buildSystemToggles()
+  buildFocusButtons(scene)
 }
 
 // Boot
 applyHealth('healthy')
+state.visibleSystems = DEFAULT_VISIBLE.slice()
 setupDisclaimer()
 
 const canvas = document.getElementById('c')
@@ -272,9 +276,9 @@ setupControls(scene)
 scene.resize()
 ui.updateReadouts()
 ui.setLoadProgress({
-  phase: 'core',
+  phase: 'chunks',
   loaded: 0,
-  total: 1,
+  total: 15,
   fraction: 0,
-  label: 'Fetching HuBMAP HRA models…',
+  label: 'Fetching atlas.json…',
 })

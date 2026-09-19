@@ -1,23 +1,27 @@
+import { DEFAULT_VISIBLE } from './bp3dAtlas.js'
+
 /** Shared mutable app state */
 export const state = {
+  /** BodyParts3D is adult male only — kept for honesty in UI copy */
   sex: 'male',
+  referenceNote: 'Adult male reference (BodyParts3D 4.0)',
   health: 'healthy',
   heightCm: 170,
   weightKg: 70,
   simSpeed: 1,
 
-  /** Derived vitals (updated by applyHealth) */
   heartRate: 72,
   bloodFlowIntensity: 1,
   digestionSpeed: 1,
   skinTone: 0xe8b89a,
-  /** translucent | solid | hidden */
-  skinMode: 'translucent',
+  /** translucent | solid | hidden — drives integumentary */
+  skinMode: 'hidden',
 
-  /** Camera / focus */
+  /** Visible anatomical systems (BodyParts3D system ids) */
+  visibleSystems: DEFAULT_VISIBLE.slice(),
+
   focusedOrgan: null,
 
-  /** Digestion */
   digestion: {
     active: false,
     food: null,
@@ -78,9 +82,7 @@ export function applyHealth(health) {
 }
 
 export function bodyScaleFromAnthropometrics() {
-  // Height: 140–210 cm → vertical scale around 0.82–1.24 (ref 170)
   const h = state.heightCm / 170
-  // Weight relative to height-ish BMI proxy → girth
   const ideal = 22 * (state.heightCm / 100) ** 2
   const bmiRatio = state.weightKg / Math.max(ideal, 1)
   const girth = Math.min(1.45, Math.max(0.75, Math.sqrt(bmiRatio)))
